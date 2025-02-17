@@ -1,14 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Interactive Web Page</title>
+    <title>Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .quiz-container {
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .question {
+            margin-bottom: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hallo, wereld!</h1>
-    <button onclick="showMessage()">Klik hier</button>
+    <div class="quiz-container">
+        <h2>Quiz</h2>
+        <div class="question">
+            <p>1. Wat is de hoofdstad van Nederland?</p>
+            <input type="radio" name="q1" value="Amsterdam"> Amsterdam<br>
+            <input type="radio" name="q1" value="Rotterdam"> Rotterdam<br>
+            <input type="radio" name="q1" value="Den Haag"> Den Haag<br>
+        </div>
+        <div class="question">
+            <p>2. Welke kleur heeft de Nederlandse vlag?</p>
+            <input type="radio" name="q2" value="Rood, Wit, Blauw"> Rood, Wit, Blauw<br>
+            <input type="radio" name="q2" value="Groen, Wit, Blauw"> Groen, Wit, Blauw<br>
+            <input type="radio" name="q2" value="Rood, Geel, Blauw"> Rood, Geel, Blauw<br>
+        </div>
+        <button onclick="checkAnswers()">Controleer antwoorden</button>
+        <div class="result" id="result"></div>
+    </div>
+
     <script>
-        function showMessage() {
-            alert("Dit is een bericht vanuit JavaScript!");
+        function checkAnswers() {
+            var score = 0;
+            var totalQuestions = 2;
+
+            var q1 = document.querySelector('input[name="q1"]:checked');
+            if (q1 && q1.value === "Amsterdam") {
+                score++;
+            }
+
+            var q2 = document.querySelector('input[name="q2"]:checked');
+            if (q2 && q2.value === "Rood, Wit, Blauw") {
+                score++;
+            }
+
+            var result = document.getElementById('result');
+            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
         }
     </script>
 </body>
