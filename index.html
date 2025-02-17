@@ -26,16 +26,16 @@
     <div class="quiz-container">
         <h2>Quiz</h2>
         <div class="question">
-            <p>1. Wat is de hoofdstad van Nederland?</p>
-            <input type="radio" name="q1" value="Amsterdam"> Amsterdam<br>
-            <input type="radio" name="q1" value="Rotterdam"> Rotterdam<br>
-            <input type="radio" name="q1" value="Den Haag"> Den Haag<br>
+            <p>1. Je wilt een bestand delen naar een collega, later gaat hij jou deze terug sturen. Hoe kan je dit het beste aanpakken?</p>
+            <input type="radio" name="q1" value="1"> Je mailt naar de collega en hij mailt jouw terug<br>
+            <input type="radio" name="q1" value="2"> Je stuurt hem het bestand op teams naar je collega en later stuurd hij deze terug<br>
+            <input type="radio" name="q1" value="3"> Je deelt het bestand op teams onder het kopje 'bestanden' zodat jullie allebei live aanpassingen kunnen maken<br>
         </div>
         <div class="question">
             <p>2. Welke kleur heeft de Nederlandse vlag?</p>
-            <input type="radio" name="q2" value="Rood, Wit, Blauw"> Rood, Wit, Blauw<br>
-            <input type="radio" name="q2" value="Groen, Wit, Blauw"> Groen, Wit, Blauw<br>
-            <input type="radio" name="q2" value="Rood, Geel, Blauw"> Rood, Geel, Blauw<br>
+            <input type="radio" name="q2" value="4"> Rood, Wit, Blauw<br>
+            <input type="radio" name="q2" value="5"> Groen, Wit, Blauw<br>
+            <input type="radio" name="q2" value="6"> Rood, Geel, Blauw<br>
         </div>
         <button onclick="checkAnswers()">Controleer antwoorden</button>
         <div class="result" id="result"></div>
@@ -47,17 +47,22 @@
             var totalQuestions = 2;
 
             var q1 = document.querySelector('input[name="q1"]:checked');
-            if (q1 && q1.value === "Amsterdam") {
+            if (q1 && q1.value === "3") {
                 score++;
             }
 
             var q2 = document.querySelector('input[name="q2"]:checked');
-            if (q2 && q2.value === "Rood, Wit, Blauw") {
+            if (q2 && q2.value === "4") {
                 score++;
             }
 
             var result = document.getElementById('result');
             result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
+
+            if (score == 2) {
+                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag nu door naar het volgende vakje!";
+
+            }
         }
     </script>
 </body>
