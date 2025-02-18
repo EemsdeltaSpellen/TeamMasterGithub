@@ -50,8 +50,8 @@
         </h2>
         <div class="question">
             <p>1. Je wilt een bestand delen naar een collega, later gaat hij jou deze terug sturen. Hoe kan je dit het beste aanpakken?</p>
-            <input type="radio" name="q1" value="1"> Je mailt naar de collega en hij mailt jouw terug<br>
-            <input type="radio" name="q1" value="2"> Je stuurt hem het bestand op teams naar je collega en later stuurd hij deze terug<br>
+            <input type="radio" name="q1" value="1"> Je mailt naar de collega en hij mailt jou terug<br>
+            <input type="radio" name="q1" value="2"> Je stuurt hem het bestand op teams naar je collega en later stuurt hij deze terug<br>
             <input type="radio" name="q1" value="3"> Je deelt het bestand op teams onder het kopje 'bestanden' zodat jullie allebei live aanpassingen kunnen maken<br>
         </div>
         <div class="question">
@@ -61,6 +61,7 @@
             <input type="radio" name="q2" value="6"> Rood, Geel, Blauw<br>
         </div>
         <button id="checkButton" onclick="checkAnswers()" style="font-size: 20px; padding: 10px 20px;">Controleer antwoorden</button>
+        <button id="nextPageButton" onclick="window.location.href='game2.html'" style="font-size: 20px; padding: 10px 20px;">Opracht 2</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();" style="font-size: 20px; padding: 10px 20px;">Reset</button>
         <div class="result" id="result"></div>
         <div class="attempts" id="attempts">Poging: 0 van 2</div>
@@ -98,7 +99,7 @@
             result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
 
             if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag nu door naar het volgende vakje!";
+                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag nu nog een keer gooien";
             }
 
             if (pogingen >= 2) {
