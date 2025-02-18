@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digitale Escape Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+        }
+        .escape-room-container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        .puzzle {
+            margin-bottom: 20px;
+        }
+        .code-input {
+            margin-top: 10px;
+        }
+        .disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="escape-room-container">
+        <h2>Digitale Escape Room</h2>
+        <div class="puzzle">
+            <p><strong>Puzzel 1:</strong> Vind de verborgen code in de tekst.</p>
+            <p>Hint: ...</p>
+            <p>Bij de gemeente Eemsdelta streven we ernaar om onze dienstverlening voortdurend te verbeteren door middel van digitalisering. 
+                Een van de belangrijkste tools die we hiervoor gebruiken is Microsoft Teams. Teams stelt ons in staat om efficiënt te communiceren en samen te werken, zelfs als we op verschillende locaties werken.
+                Door het gebruik van Teams kunnen we onze interne processen optimaliseren en beter inspelen op de behoeften van onze inwoners. 
+                Het is een krachtig hulpmiddel dat ons helpt om als team effectiever te werken en onze doelen te bereiken.</p>
+            <p>Voer de code in die je hebt gevonden:</p>
+            <input type="text" id="code1" class="code-input">
+        </div>
+        <button id="checkButton" onclick="checkEscapeRoomCode()" style="font-size: 20px; padding: 10px 20px;">Controleer code</button>
+        <button id="nextPageButton" onclick="window.location.href='index.html'" style="font-size: 20px; padding: 10px 20px;">Opdracht 1</button>
+        <button id="resetButton" onclick="localStorage.removeItem('pogingen2'); location.reload();" style="font-size: 20px; padding: 10px 20px;">Reset</button>
+        <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
+        <div class="attempts" id="attempts">Poging: 0 van 2</div>
+    </div>
+
+    <script>
+        var pogingen2 = localStorage.getItem('pogingen2') ? parseInt(localStorage.getItem('pogingen2')) : 0;
+
+        document.getElementById('attempts').textContent = "Poging: " + pogingen2 + " van 2";
+
+        if (pogingen2 >= 2) {
+            var checkButton = document.getElementById('checkButton');
+            checkButton.disabled = true;
+            checkButton.classList.add('disabled');
+        }
+
+        function checkEscapeRoomCode() {
+            var code1 = document.getElementById('code1').value;
+            pogingen2++;
+            localStorage.setItem('pogingen2', pogingen2);
+
+            if (code1.toLowerCase() === 'teams') {
+                document.getElementById('result').textContent = 'Gefeliciteerd! Je hebt de code gevonden en de eerste puzzel opgelost!';
+            } else {
+                document.getElementById('result').textContent = 'De code is niet correct. Probeer het opnieuw.';
+            }
+
+            document.getElementById('attempts').textContent = "Poging: " + pogingen2 + " van 2";
+
+            if (pogingen2 >= 2) {
+                var checkButton = document.getElementById('checkButton');
+                checkButton.disabled = true;
+                checkButton.classList.add('disabled');
+            }
+        }
+    </script>
+</body>
+</html>
