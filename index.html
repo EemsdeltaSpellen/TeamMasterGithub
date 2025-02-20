@@ -65,7 +65,42 @@
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();" style="font-size: 20px; padding: 10px 20px;">Reset</button>
         <div class="result" id="result"></div>
         <div class="attempts" id="attempts">Poging: 0 van 2</div>
+
+
+        
     </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
+
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+        
+        const db = getFirestore(app);
+
+
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyD5g0a1pCGEbcU-PmRx7wT78xyRCpRpgLQ",
+          authDomain: "eemsdelta-a37cf.firebaseapp.com",
+          projectId: "eemsdelta-a37cf",
+          storageBucket: "eemsdelta-a37cf.firebasestorage.app",
+          messagingSenderId: "397552932048",
+          appId: "1:397552932048:web:255dfcdd57a126a2bffad5",
+          measurementId: "G-6W7B65HCJX"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>
+
+
 
     <script>
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
@@ -78,40 +113,52 @@
             }
 
 
-        function checkAnswers() {
-            var score = 0;
-            var totalQuestions = 2;
-            pogingen++;
-            localStorage.setItem('pogingen', pogingen);
+            async function checkAnswers() {
+    var score = 0;
+    var totalQuestions = 2;
+    pogingen++;
+    localStorage.setItem('pogingen', pogingen);
 
+    var q1 = document.querySelector('input[name="q1"]:checked');
+    if (q1 && q1.value === "3") {
+        score++;
+    }
 
-            var q1 = document.querySelector('input[name="q1"]:checked');
-            if (q1 && q1.value === "3") {
-                score++;
-            }
+    var q2 = document.querySelector('input[name="q2"]:checked');
+    if (q2 && q2.value === "4") {
+        score++;
+    }
 
-            var q2 = document.querySelector('input[name="q2"]:checked');
-            if (q2 && q2.value === "4") {
-                score++;
-            }
+    var result = document.getElementById('result');
+    result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
 
-            var result = document.getElementById('result');
-            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
+    if (score == 2) {
+        result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag nu nog een keer gooien";
+    }
 
-            if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag nu nog een keer gooien";
-            }
+    if (pogingen >= 2) {
+        var checkButton = document.getElementById('checkButton');
+        checkButton.disabled = true;
+        checkButton.classList.add('disabled');
+    }
 
-            if (pogingen >= 2) {
-                var checkbutton = document.getElementById('checkbutton');
-                checkButton.disabled = true;
-                checkButton.classList.add('disabled');
-            }
+    var attempts = document.getElementById('attempts');
+    attempts.textContent = "Poging: " + pogingen + " van 2";
 
-            var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 2";
+    // **Score opslaan in Firestore**
+    try {
+        const userScoreRef = doc(db, "quiz_scores", "gebruiker_" + new Date().getTime());
+        await setDoc(userScoreRef, {
+            score: score,
+            pogingen: pogingen,
+            timestamp: new Date()
+        });
+        console.log("Score opgeslagen in Firestore!");
+    } catch (error) {
+        console.error("Fout bij opslaan van score:", error);
+    }
+}
 
-        }
     </script>
 </body>
 </html>
