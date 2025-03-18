@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>De grote EemsdeltaDigitaal Quiz!</title>
-    <style>
-        body {text-align: center; background-color: hsl(210, 83.7%, 26.5%); color: rgb(255, 255, 255);}
-    </style>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>De grote EemsdeltaDigitaal Quiz!</title>
+        <style>
+            body {
+                text-align: center;
+                background-color: hsl(210, 83.7%, 26.5%);
+                color: rgb(255, 255, 255);
+                font-size: 2em; 
+            }
+            input, button {
+                font-size: 1em; 
+                padding: 0.5em; 
+                margin: 0.5em; 
+            }
+            h2, h3, h1, h2 {
+                font-size: 1em; 
+            }
+        </style>
+    </head>
 <body>
     <div id="authForm">
         <h2>Sign Up or Sign In</h2>
@@ -168,7 +181,7 @@ const firebaseConfig = {
             questionSpace.innerHTML = ""; // Hide the last question
             userInput.style.display = 'none'; // Hide the input field
             submitButton.style.display = 'none'; // Hide the submit button
-            scoreSpace.innerHTML = "Your score is " + score;
+            scoreSpace.innerHTML = "Je eindscore is " + score;
             const finalScore = score;
             saveUserScore(finalScore);
 
