@@ -4,27 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication is Fun</title>
+    <title>De grote EemsdeltaDigitaal Quiz!</title>
     <style>
-        body {text-align: center; background-color: lightseagreen; color: black;}
+        body {text-align: center; background-color: hsl(210, 83.7%, 26.5%); color: rgb(255, 255, 255);}
     </style>
 </head>
 <body>
     <div id="authForm">
         <h2>Sign Up or Sign In</h2>
-        <input type="email" placeholder="email" id="userEmail">
+        <input type="email" placeholder="Username" id="userEmail">
         <input type="password" placeholder="password" id="userPassword">  <br><br>
-        <button id="signUpButton">Sign Up</button>
-        <button id="signInButton">Sign In</button>
+        <button id="signUpButton">Nieuw Account</button>
+        <button id="signInButton">Inloggen</button>
     </div>
 
-    <div id="secretContent">
+    <div id="secretContent" style="display: none;">
         <h3>Welkom in de quiz!</h3>
         <h1 id="questionSpace" ></h1>
         <input id="userInput"> <br><br>
-        <button id = "submitButton" >Submit</button>
+        <button id = "submitButton" >Verstuur</button>
         <h2 id="scoreSpace"></h2>
-        <button id="signOutButton">Sign Out</button>
+        <button id="signOutButton">Uitloggen</button>
     </div>
 
     <script type="module">
@@ -82,7 +82,7 @@ const firebaseConfig = {
         secretContent.style.display = 'none';
 
         const userSignUp = async() => {
-            const signUpEmail = userEmail.value;
+            const signUpEmail = userEmail.value + "@gmail.com";
             const signUpPassword = userPassword.value;
             createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
             .then((userCredential) => {
@@ -98,7 +98,7 @@ const firebaseConfig = {
         }
 
         const userSignIn = async() => {
-            const signInEmail = userEmail.value;
+            const signInEmail = userEmail.value +  "@gmail.com";	
             const signInPassword = userPassword.value;
             signInWithEmailAndPassword(auth, signInEmail, signInPassword)
             .then((userCredential) => {
@@ -165,6 +165,9 @@ const firebaseConfig = {
         }
 
         function completeQuiz() {
+            questionSpace.innerHTML = ""; // Hide the last question
+            userInput.style.display = 'none'; // Hide the input field
+            submitButton.style.display = 'none'; // Hide the submit button
             scoreSpace.innerHTML = "Your score is " + score;
             const finalScore = score;
             saveUserScore(finalScore);
@@ -182,7 +185,7 @@ const firebaseConfig = {
                         });
                         console.log("Document successfully written!");
                         alert("Your score has been saved!");
-                        
+
                     } catch(error) {
                         console.error("Error adding document: ", error);
                     }
