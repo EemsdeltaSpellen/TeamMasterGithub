@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -101,12 +101,12 @@ const firebaseConfig = {
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user);
-                alert("Your account has been created!");
+                alert("account is aangemaakt!");
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorCode + errorMessage)
+                alert(errorCode + errorMessage)
             })
         }
 
@@ -116,7 +116,7 @@ const firebaseConfig = {
             signInWithEmailAndPassword(auth, signInEmail, signInPassword)
             .then((userCredential) => {
                 const user = userCredential.user;
-                alert("You have signed in successfully!");
+                alert("Succesvol ingelogd!");
             })
             .catch((error) => {
                 const errorCode = error.code;
