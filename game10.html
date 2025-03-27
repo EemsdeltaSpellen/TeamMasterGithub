@@ -12,7 +12,7 @@
                 color: hwb(210 4% 51%);
                 font-size: 1.9em; 
             }
-            input, button {
+            input, button, select {
                 font-size: 0.9em; 
                 padding: 0.4em; 
                 margin: 0.4em; 
@@ -20,19 +20,17 @@
             h2, h3, h1, h2 {
                 font-size: 0.9em; 
             }
-            .logo {
-                position:
-                top: 10px;
-                left: 10px;
-            }
+
         </style>
     </head>
-<body>
-    <img src="logo.png" alt="Afbeelding" width="200" height="200" class="logo"> 
     <div id="authForm">
         <h2>Maak een account of log in</h2>
-        <input type="email" placeholder="username" id="userEmail">
-        <input type="password" placeholder="wachtwoord" id="userPassword">  <br><br>
+        <div style="display: block; margin-bottom: 0.5em;">
+            <input type="email" placeholder="username" id="userEmail" style="width: 80%; max-width: 300px; display: block; margin: 0.4em auto;">
+        </div>
+        <div style="display: block; margin-bottom: 0.5em;">
+            <input type="password" placeholder="wachtwoord" id="userPassword" style="width: 80%; max-width: 300px; display: block; margin: 0.4em auto;">  
+        </div>
         <h2>Let op! het wachtwoord moet minimaal 6 karakters zijn.</h2>
         <button id="signUpButton">Nieuw Account</button>
         <button id="signInButton">Inloggen</button>
@@ -40,17 +38,17 @@
 
     <div id="secretContent" style="display: none;">
         <h3 id="highScoreMessage"> </h3>
-        <h3 Welkom in de quiz!> </h3>
-        <h1 id="questionSpace" ></h1>
-        <input id="userInput"> <br><br>
-        <button id = "submitButton" >Verstuur</button>
+        <h1 id="questionSpace"></h1>
+        <select id="userSelect">
+            <option value="">Kies een antwoord...</option>
+        </select> <br><br>
+        <button id="submitButton">Verstuur</button>
         <h2 id="scoreSpace"></h2>
         <button id="signOutButton">Uitloggen</button>
         <h2 id="timer"></h2>
     </div>
 
     <script type="module">
-        //Update the below URL with the appropriate version if necessary.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         import {
             getAuth,
@@ -95,10 +93,35 @@
         const submitButton = document.querySelector("#submitButton");
         const highScoreMessage = document.querySelector("#highScoreMessage");
         const timerDisplay = document.querySelector("#timer");
+        const questionSpace = document.querySelector("#questionSpace");
+        const userSelect = document.querySelector("#userSelect");
+        const scoreSpace = document.querySelector("#scoreSpace");
 
         let timer;
-        let timeLeft = 60; // 1 minuut
+        let timeLeft = 60;
         let timerEnded = false;
+        let score = 0;
+        let usedQuestionIndices = [];
+        let currentQuestionIndex;
+
+        // Quiz vragen
+        const questions = [
+            {
+                question: "Wat is de hoofdstad van de gemeente Eemsdelta?",
+                options: ["Delfzijl", "Appingedam", "Loppersum", "Termunterzijl"],
+                answer: "Appingedam"
+            },
+            {
+                question: "Wat is een populaire jaarlijkse evenement in Eemsdelta?",
+                options: ["De Damsterdag", "De Delfzijl Dag", "De Eemsdelta Dag", "De Appingedam Dag"],
+                answer: "De Damsterdag"
+            },
+            {
+                question: "Welk natuurgebied in Eemsdelta is populair voor wandelingen en fietstochten?",
+                options: ["Termunterzijl", "Appingedam", "Delfzijl", "Loppersum"],
+                answer: "Termunterzijl"
+            }
+        ];
 
         secretContent.style.display = 'none';
 
@@ -124,8 +147,7 @@
             signInWithEmailAndPassword(auth, signInEmail, signInPassword)
             .then((userCredential) => {
                 const user = userCredential.user;
-                alert("Succesvol ingelogd!");
-                
+                alert("Succesvol ingelogd! Zodra je op OK klikt gaat de timer lopen");
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -139,6 +161,7 @@
                 if(user) {
                     authForm.style.display = 'none';
                     secretContent.style.display = 'block';
+                    resetQuiz();
                     displayQuestion();
                     displayHighScore();
                     startTimer();
@@ -147,9 +170,24 @@
                     authForm.style.display = 'block';
                     secretContent.style.display = 'none';
                     questionSpace.innerHTML = "";
-                    clearInterval(timer); // Stop de timer als de gebruiker uitlogt
+                    clearInterval(timer);
                 }
             })
+        }
+
+        function resetQuiz() {
+            // Reset quiz status
+            clearInterval(timer);
+            timeLeft = 60;
+            timerEnded = false;
+            score = 0;
+            usedQuestionIndices = [];
+            
+            // Reset UI elements
+            userSelect.style.display = '';
+            submitButton.style.display = '';
+            scoreSpace.innerHTML = "";
+            timerDisplay.textContent = `Tijd over: ${timeLeft} seconden`;
         }
 
         const userSignOut = async() => {
@@ -160,55 +198,78 @@
 
         // Timer functies
         function startTimer() {
-    timer = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = `Tijd over: ${timeLeft} seconden`;
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Tijd over: ${timeLeft} seconden`;
 
-        if (timeLeft <= 0 && !timerEnded) { 
-            timerEnded = true; 
-            clearInterval(timer); 
-            completeQuiz(); 
+                if (timeLeft <= 0 && !timerEnded) { 
+                    timerEnded = true; 
+                    clearInterval(timer); 
+                    completeQuiz(); 
+                }
+            }, 1000);
         }
-    }, 1000);
-}
 
-        // Quiz functies
-        var questions = ["Wat is de hoofdstad van de gemeente Eemsdelta?", "Wat is een populaire jaarlijkse evenement in Eemsdelta? (de ...dag)", "Welk natuurgebied in Eemsdelta is populair voor wandelingen en fietstochten? (het natuurgebied in ...)"];
-        var answers = ["appingedam", "De Damsterdag", "Termunterzijl"];
-        var counter = 0;
-        var score = 0;
-        var questionSpace = document.getElementById("questionSpace");
-        var userInput = document.getElementById("userInput");
-        var scoreSpace = document.getElementById("scoreSpace");
+        function getRandomQuestionIndex() {
+            if (usedQuestionIndices.length === questions.length) {
+                return -1; // Alle vragen zijn gebruikt
+            }
+            
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * questions.length);
+            } while (usedQuestionIndices.includes(randomIndex));
+            
+            return randomIndex;
+        }
 
         function displayQuestion() {
-            counter = Math.floor(Math.random() * questions.length);
-            questionSpace.innerHTML = questions[counter];
+            currentQuestionIndex = getRandomQuestionIndex();
+            
+            if (currentQuestionIndex === -1) {
+                completeQuiz();
+                return;
+            }
+            
+            usedQuestionIndices.push(currentQuestionIndex);
+            
+            // Reset dropdown
+            userSelect.innerHTML = '<option value="">Kies een antwoord...</option>';
+            
+            // Toon huidige vraag
+            questionSpace.innerHTML = questions[currentQuestionIndex].question;
+            
+            // Voeg opties toe aan dropdown
+            questions[currentQuestionIndex].options.forEach(option => {
+                const optionElement = document.createElement("option");
+                optionElement.value = option;
+                optionElement.textContent = option;
+                userSelect.appendChild(optionElement);
+            });
         }
 
         function submit() {
-            if(userInput.value.toLowerCase() == answers[counter]) {
+            if(userSelect.value === questions[currentQuestionIndex].answer) {
                 score++;
             }
             update();
         }
 
         function update() {
-            if(counter == (questions.length - 1)) {
+            if(usedQuestionIndices.length === questions.length) {
                 completeQuiz();
             } else {
-                counter++;
                 displayQuestion();
-                userInput.value = "";
+                userSelect.value = "";
             }
         }
 
         function completeQuiz() {
-            clearInterval(timer); // Stop de timer
-            questionSpace.innerHTML = ""; // Verberg de laatste vraag
-            userInput.style.display = 'none'; // Verberg het invoerveld
-            submitButton.style.display = 'none'; // Verberg de verzendknop
-            scoreSpace.innerHTML = "Je eindscore is " + score;
+            clearInterval(timer);
+            questionSpace.innerHTML = "Quiz afgerond!";
+            userSelect.style.display = 'none';
+            submitButton.style.display = 'none';
+            scoreSpace.innerHTML = "Je eindscore is " + score + " van de " + questions.length + " vragen goed";
             const finalScore = score;
             saveUserScore(finalScore);
             displayHighScore();
@@ -221,10 +282,10 @@
                 const scoreDocRef = doc(collection(db, "users", user.uid, "scores"));
                 try {
                     await setDoc(scoreDocRef, {
-                        score: scoreParameter
+                        score: scoreParameter,
+                        timestamp: new Date()
                     });
                     console.log("Document successfully written!");
-                    alert("Score opgeslagen!");
                 } catch(error) {
                     console.error("Error adding document: ", error);
                 }
