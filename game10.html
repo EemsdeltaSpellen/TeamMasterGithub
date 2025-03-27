@@ -5,33 +5,93 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>De grote EemsdeltaDigitaal Quiz!</title>
-        <style>
-            body {
-                text-align: center;
-                background-color: hwb(0 100% 0%);
-                color: hwb(210 4% 51%);
-                font-size: 1.9em; 
-            }
-            input, button, select {
-                font-size: 0.9em; 
-                padding: 0.4em; 
-                margin: 0.4em; 
-            }
-            h2, h3, h1, h2 {
-                font-size: 0.9em; 
-            }
-
-        </style>
+        <!DOCTYPE html>
+        <html lang="nl">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>De grote EemsdeltaDigitaal Quiz!</title>
+            <style>
+                body {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 100vh;
+                    margin: 0;
+                    background-color: hwb(0 100% 0%);
+                    color: hwb(210 4% 51%);
+                    font-size: 1.5em;
+                    text-align: center;
+                }
+                
+                .container {
+                    width: 100%;
+                    max-width: 800px;
+                    padding: 20px;
+                }
+                
+                .logo {
+                    margin-bottom: 30px;
+                }
+                
+                /* Stijl voor het authenticatieformulier */
+                #authForm input {
+                    font-size: 1.1em;
+                    padding: 15px;
+                    margin: 10px 0;
+                    width: 100%;
+                    max-width: 400px;
+                }
+                
+                #authForm button {
+                    font-size: 1.1em;
+                    padding: 15px 30px;
+                    margin: 15px 10px;
+                }
+                
+                /* GROTE antwoorden-box voor de quiz */
+                #userSelect {
+                    font-size: 1.1em;
+                    padding: 15px;
+                    width: 100%;
+                    max-width: 500px;
+                    margin: 20px 0;
+                    border: 2px solid hwb(210 4% 51%);
+                    border-radius: 5px;
+                    background-color: white;
+                }
+                
+                /* Grotere quiz knoppen */
+                #submitButton, #signOutButton {
+                    font-size: 1.1em;
+                    padding: 15px 30px;
+                    margin: 15px;
+                    min-width: 200px;
+                }
+                
+                /* Responsive aanpassingen */
+                @media (max-width: 600px) {
+                    body {
+                        font-size: 1.3em;
+                    }
+                    #userSelect {
+                        font-size: 1em;
+                        max-width: 90%;
+                    }
+                }
+            </style>
     </head>
     <div id="authForm">
         <h2>Maak een account of log in</h2>
         <div style="display: block; margin-bottom: 0.5em;">
-            <input type="email" placeholder="username" id="userEmail" style="width: 80%; max-width: 300px; display: block; margin: 0.4em auto;">
+            <input type="email" placeholder="gebruiker" id="userEmail" style="width: 80%; max-width: 300px; display: block; margin: 0.4em auto;">
         </div>
         <div style="display: block; margin-bottom: 0.5em;">
             <input type="password" placeholder="wachtwoord" id="userPassword" style="width: 80%; max-width: 300px; display: block; margin: 0.4em auto;">  
         </div>
-        <h2>Let op! het wachtwoord moet minimaal 6 karakters zijn.</h2>
+        <h2>Vraag aan de facilitator voor de inloggegevens</h2>
         <button id="signUpButton">Nieuw Account</button>
         <button id="signInButton">Inloggen</button>
     </div>
