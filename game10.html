@@ -1,131 +1,125 @@
 <!DOCTYPE html>
 <html lang="nl">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>De grote EemsdeltaDigitaal Quiz!</title>
-        <!DOCTYPE html>
-        <html lang="nl">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>De grote EemsdeltaDigitaal Quiz!</title>
-            <style>
-                body {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    min-height: 100vh;
-                    margin: 0;
-                    padding: 20px;
-                    box-sizing: border-box;
-                    background-color: hwb(0 100% 0%);
-                    color: hwb(210 4% 51%);
-                    font-size: 1.8em;
-                    text-align: center;
-                }
-                
-                .container {
-                    width: 100%;
-                    max-width: 800px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-                
-                .logo {
-                    margin-bottom: 30px;
-                    max-width: 100%;
-                    height: auto;
-                }
-                
-                /* Stijl voor het authenticatieformulier */
-                #authForm {
-                    width: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-                
-                #authForm input {
-                    font-size: 1.3em;
-                    padding: 15px;
-                    margin: 10px 0;
-                    width: 90%;
-                    max-width: 400px;
-                    border: 2px solid #ccc;
-                    border-radius: 8px;
-                }
-                
-                #authForm button {
-                    font-size: 1.3em;
-                    padding: 15px 30px;
-                    margin: 15px 10px;
-                    width: 90%;
-                    max-width: 400px;
-                }
-                
-                /* Quiz stijlen */
-                #secretContent {
-                    width: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-                
-                /* GROTE antwoorden-box voor de quiz */
-                #userSelect {
-                    font-size: 1.3em;
-                    padding: 15px;
-                    width: 90%;
-                    max-width: 500px;
-                    margin: 20px 0;
-                    border: 2px solid hwb(210 4% 51%);
-                    border-radius: 8px;
-                    background-color: white;
-                }
-                
-                /* Grotere quiz knoppen */
-                #submitButton, #signOutButton {
-                    font-size: 1.3em;
-                    padding: 15px 30px;
-                    margin: 15px;
-                    width: 90%;
-                    max-width: 400px;
-                }
-                
-                /* Responsive aanpassingen */
-                @media (max-width: 600px) {
-                    body {
-                        font-size: 1.5em;
-                        padding: 10px;
-                    }
-                    
-                    #authForm input,
-                    #userSelect,
-                    #submitButton, 
-                    #signOutButton {
-                        width: 95%;
-                        font-size: 1.1em;
-                        padding: 12px;
-                    }
-                    
-                    #authForm button {
-                        width: 95%;
-                        font-size: 1.1em;
-                    }
-                    
-                    .logo {
-                        width: 150px;
-                        height: 150px;
-                        margin-bottom: 20px;
-                    }
-                }
-            </style>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De grote EemsdeltaDigitaal Quiz!</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: hwb(0 100% 0%);
+            color: hwb(210 4% 51%);
+            font-size: 1.8em;
+            text-align: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Stijl voor het authenticatieformulier */
+        #authForm {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #authForm input {
+            font-size: 1.3em;
+            padding: 15px;
+            margin: 10px 0;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+        }
+        
+        #authForm button {
+            font-size: 1.3em;
+            padding: 15px 30px;
+            margin: 15px 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        /* Quiz stijlen */
+        #secretContent {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* GROTE antwoorden-box voor de quiz */
+        #userSelect {
+            font-size: 1.3em;
+            padding: 15px;
+            width: 90%;
+            max-width: 500px;
+            margin: 20px 0;
+            border: 2px solid hwb(210 4% 51%);
+            border-radius: 8px;
+            background-color: white;
+        }
+        
+        /* Grotere quiz knoppen */
+        #submitButton, #signOutButton {
+            font-size: 1.3em;
+            padding: 15px 30px;
+            margin: 15px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        /* Responsive aanpassingen */
+        @media (max-width: 600px) {
+            body {
+                font-size: 1.5em;
+                padding: 10px;
+            }
+            
+            #authForm input,
+            #userSelect,
+            #submitButton, 
+            #signOutButton {
+                width: 95%;
+                font-size: 1.1em;
+                padding: 12px;
+            }
+            
+            #authForm button {
+                width: 95%;
+                font-size: 1.1em;
+            }
+            
+            .logo {
+                width: 150px;
+                height: 150px;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
     <div id="authForm">
         <h2>Maak een account of log in</h2>
         <div style="display: block; margin-bottom: 0.5em;">
@@ -149,6 +143,10 @@
         <h2 id="scoreSpace"></h2>
         <button id="signOutButton">Uitloggen</button>
         <h2 id="timer"></h2>
+        <div id="incorrectAnswers" style="display: none;">
+            <h2>Verkeerde antwoorden:</h2>
+            <ul id="incorrectAnswersList"></ul>
+        </div>
     </div>
 
     <script type="module">
@@ -199,6 +197,8 @@
         const questionSpace = document.querySelector("#questionSpace");
         const userSelect = document.querySelector("#userSelect");
         const scoreSpace = document.querySelector("#scoreSpace");
+        const incorrectAnswersList = document.querySelector("#incorrectAnswersList");
+        const incorrectAnswersDiv = document.querySelector("#incorrectAnswers");
 
         let timer;
         let timeLeft = 60;
@@ -206,13 +206,14 @@
         let score = 0;
         let usedQuestionIndices = [];
         let currentQuestionIndex;
+        let incorrectAnswers = [];
 
         // Quiz vragen
         const questions = [
             {
-                question: "Wat is de hoofdstad van de gemeente Eemsdelta?",
-                options: ["Delfzijl", "Appingedam", "Loppersum", "Termunterzijl"],
-                answer: "Appingedam"
+                question: "Wat is de maximale duur van een Teams-vergadering?",
+                options: ["30 minuten", "1 uur", "4 uur", "24 uur"],
+                answer: "24 uur"
             },
             {
                 question: "Wat is een populaire jaarlijkse evenement in Eemsdelta?",
@@ -220,10 +221,46 @@
                 answer: "De Damsterdag"
             },
             {
-                question: "Welk natuurgebied in Eemsdelta is populair voor wandelingen en fietstochten?",
-                options: ["Termunterzijl", "Appingedam", "Delfzijl", "Loppersum"],
-                answer: "Termunterzijl"
-            }
+                question: "Welke functie kun je gebruiken om je powerpoint te delen in een vergadering?",
+                options: ["Powerpoint Viewer", "Scherm delen", "Vergadering opnemen", "Chat"],
+                answer: "Scherm delen"
+            },
+            {
+                question: "Wat is de naam van de online website van Eemsdelta?",
+                options: ["Eemsdelta Digitaal", "Eemsdelta Online", "Intranet", "Eemsdelta School"],
+                answer: "Intranet"
+            },
+            {
+                question: "Wat is de maximale bestandsgrootte voor een Teams-vergadering?",
+                options: ["10 MB", "100 MB", "1 GB", "2 GB"],
+                answer: "2 GB"
+            },
+            {
+                question: "Wat is de naam van de app die je kunt gebruiken om documenten te delen in Teams?",
+                options: ["OneDrive", "SharePoint", "Word", "Excel"],
+                answer: "SharePoint"
+            },
+            {
+                question: "Hoe kun je het best een bestand delen in een Teams-kanaal?",
+                options: ["Door het bestand te uploaden", "Door het bestand te kopiëren en plakken", "Door het bestand te e-mailen", "Door het bestand te verwijderen"],
+                answer: "Door het bestand te uploaden"
+            },
+            {
+                question: "Hoe heet de oude digitale werkplek van Eemsdelta die vanaf het zomer niet meer beschikbaar is?",
+                options: ["Citrix", "ChatGPT", "Intranet", "Teams"],
+                answer: "Citrix"
+            },
+            {
+                question: "Wat is de naam van de app die je kunt gebruiken om notities te maken in Teams?",
+                options: ["OneNote", "Word", "Excel", "PowerPoint"],
+                answer: "OneNote"
+            },
+            {
+                question: "Wat is het voordeel van werken aan een bestand die geupload is in Teams?",
+                options: ["Je kunt er samen tegelijk aan werken", "Het bestand staat op je eigen harde schijf", "Je kunt het bestand makkelijker printen", "Het bestand is altijd offline beschikbaar"],
+                answer: "Je kunt er samen tegelijk aan werken"
+            },
+
         ];
 
         secretContent.style.display = 'none';
@@ -285,12 +322,15 @@
             timerEnded = false;
             score = 0;
             usedQuestionIndices = [];
+            incorrectAnswers = [];
             
             // Reset UI elements
             userSelect.style.display = '';
             submitButton.style.display = '';
             scoreSpace.innerHTML = "";
             timerDisplay.textContent = `Tijd over: ${timeLeft} seconden`;
+            incorrectAnswersDiv.style.display = 'none';
+            incorrectAnswersList.innerHTML = '';
         }
 
         const userSignOut = async() => {
@@ -354,6 +394,12 @@
         function submit() {
             if(userSelect.value === questions[currentQuestionIndex].answer) {
                 score++;
+            } else {
+                incorrectAnswers.push({
+                    question: questions[currentQuestionIndex].question,
+                    selectedAnswer: userSelect.value,
+                    correctAnswer: questions[currentQuestionIndex].answer
+                });
             }
             update();
         }
@@ -376,6 +422,7 @@
             const finalScore = score;
             saveUserScore(finalScore);
             displayHighScore();
+            displayIncorrectAnswers();
         }
 
         async function saveUserScore(scoreParameter) {
@@ -406,7 +453,7 @@
                 try {
                     const querySnapshot = await getDocs(scoresQuery);
                     if(!querySnapshot.empty) {
-                        return querySnapshot.docs[0].data().score;
+                        return querySnapshot.docs.data().score;
                     } else {
                         console.log("No scores found");
                         return null;
@@ -428,6 +475,15 @@
             } else {
                 highScoreMessage.textContent = "Je hebt nog geen scores behaald.";
             }
+        }
+
+        function displayIncorrectAnswers() {
+            incorrectAnswersDiv.style.display = 'block';
+            incorrectAnswers.forEach(answer => {
+                const li = document.createElement("li");
+                li.textContent = `Vraag: ${answer.question}, Jouw antwoord: ${answer.selectedAnswer}, Correct antwoord: ${answer.correctAnswer}`;
+                incorrectAnswersList.appendChild(li);
+            });
         }
 
         signUpButton.addEventListener('click', userSignUp);
