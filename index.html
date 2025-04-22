@@ -11,19 +11,22 @@
             min-height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            font-size: 18px;
+            font-size: 16px;
+            padding: 10px;
+            box-sizing: border-box;
         }
         .quiz-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             margin: auto;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
             box-sizing: border-box;
+            background-color: #f9f9f9;
         }
         .question {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         .result {
             margin-top: 20px;
@@ -40,17 +43,33 @@
         .heading img {
             vertical-align: middle;
             margin-right: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+        button {
+            width: 100%;
+            font-size: 18px;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
         }
     </style>
 </head>
 <body>
     <div class="quiz-container">
         <h2 class="heading">
-            <img src="logo.png" alt="Afbeelding" width="100" height="100"> Quiz Prototype
+            <img src="logo.png" alt="Afbeelding"> Quiz Prototype
         </h2>
         <div id="questions"></div>
-        <button id="checkButton" onclick="checkAnswers()" style="font-size: 20px; padding: 10px 20px;">Controleer antwoorden</button>
-        <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();" style="font-size: 20px; padding: 10px 20px;">Reset</button>
+        <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
+        <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
         <div class="attempts" id="attempts">Poging: 0 van 2</div>
     </div>
