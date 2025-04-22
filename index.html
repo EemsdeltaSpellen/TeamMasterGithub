@@ -65,8 +65,9 @@
 <body>
     <div class="quiz-container">
         <h2 class="heading">
-            <img src="logo.png" alt="Afbeelding"> Quiz Prototype
+            <img src="logo.png" alt="Afbeelding">
         </h2>
+        <h2>Flexruimte 1</h2>
         <div id="questions"></div>
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
@@ -103,6 +104,7 @@
             {
                 "question": "Wat betekent de status afwezig in Teams?",
                 "options": [
+                    {"text": "kies antwoord", "value": ""},
                     {"text": "De persoon heeft handmatig hun status op afwezig gezet", "value": "2"},
                     {"text": "Teams detecteert inactiviteit en zet de status automatisch op afwezig", "value": "1"},
                     {"text": "De persoon is offline en kan geen berichten ontvangen", "value": "3"},
@@ -113,6 +115,7 @@
             {
                 "question": "Wat is de functie van Focus Time in Teams?",
                 "options": [
+                    {"text": "kies antwoord", "value": ""},
                     {"text": "Het verzenden van een melding naar teamgenoten dat je niet beschikbaar bent", "value": "5"},
                     {"text": "Het automatisch blokkeren van meldingen en meldingsgeluiden", "value": "4"},
                     {"text": "Het synchroniseren van je agenda om je focusmomenten te plannen", "value": "6"},
@@ -123,6 +126,7 @@
             {
                 "question": "Hoe plan je een vergadering in Microsoft Teams?",
                 "options": [
+                    {"text": "kies antwoord", "value": ""},
                     {"text": "Door een groeps-e-mail te sturen", "value": "5"},
                     {"text": "Via de Vergadering plannen optie in de agenda", "value": "4"},
                     {"text": "Door een nieuwe kanaalgroep te maken", "value": "6"},
@@ -133,7 +137,8 @@
             {
                 "question": "Wat kun je doen met de functie Scherm delen?",
                 "options": [
-                    {"text": "Alleen chatberichten weergevenk", "value": "5"},
+                    {"text": "kies antwoord", "value": ""},
+                    {"text": "Alleen chatberichten weergeven", "value": "5"},
                     {"text": "Een vergadering inplannen zonder andere opties", "value": "4"},
                     {"text": "Je scherm of specifieke applicatievensters tonen", "value": "6"},
                     {"text": "Videogesprekken in hoge resolutie streamen", "value": "7"}
