@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quiz Prototype</title>
+    <title>Team Online</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -11,19 +11,22 @@
             min-height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            font-size: 18px;
+            font-size: 16px;
+            padding: 10px;
+            box-sizing: border-box;
         }
         .quiz-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             margin: auto;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
             box-sizing: border-box;
+            background-color: #f9f9f9;
         }
         .question {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         .result {
             margin-top: 20px;
@@ -40,52 +43,51 @@
         .heading img {
             vertical-align: middle;
             margin-right: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+        button {
+            width: 100%;
+            font-size: 18px;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        select {
+            width: 100%;
+            white-space: normal;
         }
     </style>
 </head>
 <body>
     <div class="quiz-container">
         <h2 class="heading">
-            <img src="logo.png" alt="Afbeelding" width="100" height="100"> Quiz Prototype
+            <img src="logo.png" alt="Afbeelding">
         </h2>
-        <div class="question">
-            <p>1. Welke van de volgende functies is niet beschikbaar in Microsoft Teams?</p>
-            <input type="radio" name="q1" value="2"> Videovergaderingen<br>
-            <input type="radio" name="q1" value="1"> Bestanden delen<br>
-            <input type="radio" name="q1" value="8"> Projectmanagement tools<br>
-            <input type="radio" name="q1" value="3"> E-mail verzenden<br>
-        </div>
-        <div class="question">
-            <p>2. Wat is de sneltoets om een vergadering te verlaten in Microsoft Teams</p>
-            <input type="radio" name="q2" value="5"> Ctrl + L<br>
-            <input type="radio" name="q2" value="4"> Ctrl + Shift + Q<br>
-            <input type="radio" name="q2" value="6"> Ctrl + E<br>
-            <input type="radio" name="q2" value="7"> Ctrl + Shift + L<br>
-        </div>
-        <button id="checkButton" onclick="checkAnswers()" style="font-size: 20px; padding: 10px 20px;">Controleer antwoorden</button>
-        <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();" style="font-size: 20px; padding: 10px 20px;">Reset</button>
+        <h2>Team Online</h2>
+        <div id="questions"></div>
+        <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
+        <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
         <div class="attempts" id="attempts">Poging: 0 van 2</div>
-
-
-        
     </div>
 
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
-
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
         
-const db = getFirestore(app);
+        const db = getFirestore(app);
 
-
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
         // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
           apiKey: "AIzaSyD5g0a1pCGEbcU-PmRx7wT78xyRCpRpgLQ",
           authDomain: "eemsdelta-a37cf.firebaseapp.com",
@@ -99,20 +101,106 @@ const db = getFirestore(app);
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
-      </script>
-
-
+    </script>
 
     <script>
+        var questions = [
+{
+    "question": "Hoe kun je een privé-kanaal maken in Microsoft Teams?",
+    "options": [
+        {"text": "kies antwoord", "value": ""},
+        {"text": "Door de standaardinstellingen van een bestaand team te wijzigen", "value": "A"},
+        {"text": "Door een aanvraag in te dienen bij de IT-beheerder", "value": "B"},
+        {"text": "Door een nieuw kanaal te maken en de privacyinstelling op \"Privé\" te zetten", "value": "C"},
+        {"text": "Door je team te splitsen in kleinere groepen", "value": "D"}
+    ],
+    "correct": "C"
+},
+
+
+
+
+
+
+{
+    "question": "Wat betekent het klokpictogram dat naast een bericht verschijnt?",
+    "options": [
+        {"text": "kies antwoord", "value": ""},
+        {"text": "Het bericht is gelezen en bevestigd", "value": "A"},
+        {"text": "Het bericht is gepland om later te worden verzonden", "value": "B"},
+        {"text": "Het bericht is aangemerkt als belangrijk door het team", "value": "C"},
+        {"text": "Het bericht bevat een vergadernotitie", "value": "D"}
+    ],
+    "correct": "B"
+},
+
+
+
+
+
+
+{
+    "question": "Waar kun je op klikken om snel toegang te krijgen tot een gedeeld bestand in een kanaal?",
+    "options": [
+        {"text": "kies antwoord", "value": ""},
+        {"text": "De \"Plannen\"-tab", "value": "A"},
+        {"text": "Het \"Bestanden\"-tabblad", "value": "B"},
+        {"text": "De \"Activiteiten\"-feed", "value": "C"},
+        {"text": "De \"Wiki\"-sectie", "value": "D"}
+    ],
+    "correct": "B"
+},
+
+
+
+{
+    "question": "Wat kun je aanpassen in de teamrollen van leden?",
+    "options": [
+        {"text": "kies antwoord", "value": ""},
+        {"text": "Hun toegang tot alle Microsoft 365-apps blokkeren", "value": "A"},
+        {"text": "Ze de rol van eigenaar geven of beperken tot lid", "value": "B"},
+        {"text": "Hun profielnaam wijzigen in de teamomgeving", "value": "C"},
+        {"text": "De duur van hun lidmaatschap instellen", "value": "D"}
+    ],
+    "correct": "B"
+}
+
+
+
+
+
+
+        ];
+
+        var selectedQuestions = [];
+        while (selectedQuestions.length < 2) {
+            var randomIndex = Math.floor(Math.random() * questions.length);
+            if (!selectedQuestions.includes(questions[randomIndex])) {
+                selectedQuestions.push(questions[randomIndex]);
+            }
+        }
+
+        var questionsContainer = document.getElementById('questions');
+        selectedQuestions.forEach(function(q, index) {
+            var questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                <p>${index + 1}. ${q.question}</p>
+                <select name="q${index + 1}">
+                    ${q.options.map(option => `<option value="${option.value}">${option.text}</option>`).join('')}
+                </select>
+            `;
+            questionsContainer.appendChild(questionDiv);
+        });
+
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
 
         document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 2";
         if (pogingen >= 2) {
-                var checkbutton = document.getElementById('checkbutton');
-                checkButton.disabled = true;
-                checkButton.classList.add('disabled');
-            }
-
+            var checkButton = document.getElementById('checkButton');
+            checkButton.disabled = true;
+            checkButton.classList.add('disabled');
+        }
 
         function checkAnswers() {
             var score = 0;
@@ -120,33 +208,28 @@ const db = getFirestore(app);
             pogingen++;
             localStorage.setItem('pogingen', pogingen);
 
-
-            var q1 = document.querySelector('input[name="q1"]:checked');
-            if (q1 && q1.value === "3") {
-                score++;
-            }
-
-            var q2 = document.querySelector('input[name="q2"]:checked');
-            if (q2 && q2.value === "4") {
-                score++;
-            }
+            selectedQuestions.forEach(function(q, index) {
+                var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
+                if (answer === q.correct) {
+                    score++;
+                }
+            });
 
             var result = document.getElementById('result');
             result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
 
             if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag nu nog een keer gooien";
+                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag een beloning pakken van de beloningstapel";
             }
 
             if (pogingen >= 2) {
-                var checkbutton = document.getElementById('checkbutton');
+                var checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
 
             var attempts = document.getElementById('attempts');
             attempts.textContent = "Poging: " + pogingen + " van 2";
-
         }
     </script>
 </body>
