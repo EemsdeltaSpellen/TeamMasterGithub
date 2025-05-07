@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Team Informatievoorziening</title>
+    <title>Team InformatieVoorziening</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -76,7 +76,7 @@
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
-        <div class="attempts" id="attempts">Poging: 0 van 2</div>
+        <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
 
     <script type="module">
@@ -103,18 +103,18 @@
         const analytics = getAnalytics(app);
     </script>
 
-    <script>
-        var questions = [
+<script>
+    var questions = [
 {
-    "question": "Welke optie is niet beschikbaar bij het scherm delen in een Teams-vergadering?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Een specifiek venster delen", "value": "A"},
-        {"text": "Een PowerPoint-presentatie direct presenteren", "value": "B"},
-        {"text": "De controle over je scherm overdragen aan een ander", "value": "C"},
-        {"text": "De toegang tot je volledige computerbestanden delen", "value": "D"}
-    ],
-    "correct": "D"
+"question": "Welke optie is niet beschikbaar bij het scherm delen in een Teams-vergadering?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Een specifiek venster delen", "value": "A"},
+    {"text": "Een PowerPoint-presentatie direct presenteren", "value": "B"},
+    {"text": "De controle over je scherm overdragen aan een ander", "value": "C"},
+    {"text": "De toegang tot je volledige computerbestanden delen", "value": "D"}
+],
+"correct": "D"
 },
 
 
@@ -124,15 +124,15 @@
 
 
 {
-    "question": "Wat gebeurt er wanneer je een bericht markeert als \"Belangrijk\"?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Het bericht wordt verwijderd na 24 uur", "value": "A"},
-        {"text": "Het bericht wordt gemarkeerd met een rode balk en apart vermeld in meldingen", "value": "B"},
-        {"text": "Het bericht krijgt een sterretje in de titelbalk", "value": "C"},
-        {"text": "Het bericht wordt automatisch naar alle teamleden gemaild", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Wat gebeurt er wanneer je een bericht markeert als \"Belangrijk\"?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Het bericht wordt verwijderd na 24 uur", "value": "A"},
+    {"text": "Het bericht wordt gemarkeerd met een rode balk en apart vermeld in meldingen", "value": "B"},
+    {"text": "Het bericht krijgt een sterretje in de titelbalk", "value": "C"},
+    {"text": "Het bericht wordt automatisch naar alle teamleden gemaild", "value": "D"}
+],
+"correct": "B"
 },
 
 
@@ -142,30 +142,30 @@
 
 
 {
-    "question": "Hoe kun je je meldingsinstellingen op teamniveau beheren?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Via de algemene profielinstellingen", "value": "A"},
-        {"text": "Via de specifieke instellingen van een kanaal of team", "value": "B"},
-        {"text": "Door een melding aan een eigenaar te sturen", "value": "C"},
-        {"text": "Door een wijziging aan te brengen in de agenda", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Hoe kun je je meldingsinstellingen op teamniveau beheren?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Via de algemene profielinstellingen", "value": "A"},
+    {"text": "Via de specifieke instellingen van een kanaal of team", "value": "B"},
+    {"text": "Door een melding aan een eigenaar te sturen", "value": "C"},
+    {"text": "Door een wijziging aan te brengen in de agenda", "value": "D"}
+],
+"correct": "B"
 },
 
 
 
 
 {
-    "question": "Welke rol speelt de \"Planner\"-app in Microsoft Teams?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Het organiseren en beheren van taken en projectdeadlines", "value": "A"},
-        {"text": "Het bijhouden van persoonlijke vergaderingen", "value": "B"},
-        {"text": "Het ondersteunen van cloudopslag en documentenbeheer", "value": "C"},
-        {"text": "Het maken van samenvattingen na teamvergaderingen", "value": "D"}
-    ],
-    "correct": "A"
+"question": "Welke rol speelt de \"Planner\"-app in Microsoft Teams?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Het organiseren en beheren van taken en projectdeadlines", "value": "A"},
+    {"text": "Het bijhouden van persoonlijke vergaderingen", "value": "B"},
+    {"text": "Het ondersteunen van cloudopslag en documentenbeheer", "value": "C"},
+    {"text": "Het maken van samenvattingen na teamvergaderingen", "value": "D"}
+],
+"correct": "A"
 }
 
 
@@ -174,10 +174,10 @@
 
 
 
-        ];
+    ];
 
         var selectedQuestions = [];
-        while (selectedQuestions.length < 2) {
+        while (selectedQuestions.length < 1) {
             var randomIndex = Math.floor(Math.random() * questions.length);
             if (!selectedQuestions.includes(questions[randomIndex])) {
                 selectedQuestions.push(questions[randomIndex]);
@@ -199,8 +199,8 @@
 
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
 
-        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 2";
-        if (pogingen >= 2) {
+        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+        if (pogingen >= 1) {
             var checkButton = document.getElementById('checkButton');
             checkButton.disabled = true;
             checkButton.classList.add('disabled');
@@ -208,7 +208,7 @@
 
         function checkAnswers() {
             var score = 0;
-            var totalQuestions = 2;
+            var totalQuestions = 1;
             pogingen++;
             localStorage.setItem('pogingen', pogingen);
 
@@ -216,24 +216,24 @@
                 var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
                 if (answer === q.correct) {
                     score++;
+                } else {
+                    var correctOption = q.options.find(option => option.value === q.correct);
+                    document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
                 }
             });
 
-            var result = document.getElementById('result');
-            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
-
-            if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag een beloning pakken van de beloningstapel";
+            if (score === 1) {
+                document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
             }
 
-            if (pogingen >= 2) {
+            if (pogingen >= 1) {
                 var checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
 
             var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 2";
+            attempts.textContent = "Poging: " + pogingen + " van 1";
         }
     </script>
 </body>

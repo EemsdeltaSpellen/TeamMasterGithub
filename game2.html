@@ -76,7 +76,7 @@
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
-        <div class="attempts" id="attempts">Poging: 0 van 2</div>
+        <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
 
     <script type="module">
@@ -103,57 +103,57 @@
         const analytics = getAnalytics(app);
     </script>
 
-    <script>
-        var questions = [
-            {
-                "question": "Wat betekent een rood pictogram naast iemands naam?",
-                "options": [
-                    {"text": "kies antwoord", "value": ""},
-                    {"text": "De persoon heeft de Afwezigheid status ingesteld", "value": "2"},
-                    {"text": "De persoon werkt buiten kantooruren", "value": "1"},
-                    {"text": "De persoon gebruikt de Niet storen modus (zit in een vergadering)", "value": "3"},
-                    {"text": "De persoon heeft de applicatie afgesloten", "value": "8"}
-                ],
-                "correct": "1"
-            },
+<script>
+    var questions = [
+        {
+            "question": "Wat betekent een rood pictogram naast iemands naam?",
+            "options": [
+                {"text": "kies antwoord", "value": ""},
+                {"text": "De persoon heeft de Afwezigheid status ingesteld", "value": "2"},
+                {"text": "De persoon werkt buiten kantooruren", "value": "1"},
+                {"text": "De persoon gebruikt de Niet storen modus (zit in een vergadering)", "value": "3"},
+                {"text": "De persoon heeft de applicatie afgesloten", "value": "8"}
+            ],
+            "correct": "1"
+        },
 {
-    "question": "Hoe voeg je een nieuwe app toe aan een kanaal?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Door permissies te vragen aan de eigenaar", "value": "A"},
-        {"text": "Door naar \"Apps beheren\" te gaan in de tabbladsectie", "value": "B"},
-        {"text": "Door een koppeling in een bericht te delen", "value": "C"},
-        {"text": "Door een IT-beheerder toestemming te laten geven", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Hoe voeg je een nieuwe app toe aan een kanaal?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Door permissies te vragen aan de eigenaar", "value": "A"},
+    {"text": "Door naar \"Apps beheren\" te gaan in de tabbladsectie", "value": "B"},
+    {"text": "Door een koppeling in een bericht te delen", "value": "C"},
+    {"text": "Door een IT-beheerder toestemming te laten geven", "value": "D"}
+],
+"correct": "B"
 },
 
-            {
-                "question": "Wat kun je vinden via de zoekbalk bovenaan in Teams?",
-                "options": [
-                    {"text": "kies antwoord", "value": ""},
-                    {"text": "Alleen berichten binnen een chat", "value": "5"},
-                    {"text": "Berichten, bestanden en contactpersonen platformbreed", "value": "4"},
-                    {"text": "Specifieke app-functionaliteiten", "value": "6"},
-                    {"text": "Enkel gedeelde bestanden in het huidige team", "value": "7"}
-                ],
-                "correct": "4"
-            },
+        {
+            "question": "Wat kun je vinden via de zoekbalk bovenaan in Teams?",
+            "options": [
+                {"text": "kies antwoord", "value": ""},
+                {"text": "Alleen berichten binnen een chat", "value": "5"},
+                {"text": "Berichten, bestanden en contactpersonen platformbreed", "value": "4"},
+                {"text": "Specifieke app-functionaliteiten", "value": "6"},
+                {"text": "Enkel gedeelde bestanden in het huidige team", "value": "7"}
+            ],
+            "correct": "4"
+        },
 {
-    "question": "Je hebt je loonstrook ontvangen en je wilt hem opslaan op je computer, waar kan je dit het beste doen?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Op SharePoint in een Teams-kanaal", "value": "A"},
-        {"text": "In je persoonlijke OneDrive", "value": "B"},
-        {"text": "Lokaal op je laptop", "value": "C"}
-    ],
-    "correct": "B"
+"question": "Je hebt je loonstrook ontvangen en je wilt hem opslaan op je computer, waar kan je dit het beste doen?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Op SharePoint in een Teams-kanaal", "value": "A"},
+    {"text": "In je persoonlijke OneDrive", "value": "B"},
+    {"text": "Lokaal op je laptop", "value": "C"}
+],
+"correct": "B"
 }
 
-        ];
+    ];
 
         var selectedQuestions = [];
-        while (selectedQuestions.length < 2) {
+        while (selectedQuestions.length < 1) {
             var randomIndex = Math.floor(Math.random() * questions.length);
             if (!selectedQuestions.includes(questions[randomIndex])) {
                 selectedQuestions.push(questions[randomIndex]);
@@ -175,8 +175,8 @@
 
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
 
-        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 2";
-        if (pogingen >= 2) {
+        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+        if (pogingen >= 1) {
             var checkButton = document.getElementById('checkButton');
             checkButton.disabled = true;
             checkButton.classList.add('disabled');
@@ -184,7 +184,7 @@
 
         function checkAnswers() {
             var score = 0;
-            var totalQuestions = 2;
+            var totalQuestions = 1;
             pogingen++;
             localStorage.setItem('pogingen', pogingen);
 
@@ -192,24 +192,24 @@
                 var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
                 if (answer === q.correct) {
                     score++;
+                } else {
+                    var correctOption = q.options.find(option => option.value === q.correct);
+                    document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
                 }
             });
 
-            var result = document.getElementById('result');
-            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
-
-            if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag een beloning pakken van de beloningstapel";
+            if (score === 1) {
+                document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
             }
 
-            if (pogingen >= 2) {
+            if (pogingen >= 1) {
                 var checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
 
             var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 2";
+            attempts.textContent = "Poging: " + pogingen + " van 1";
         }
     </script>
 </body>
