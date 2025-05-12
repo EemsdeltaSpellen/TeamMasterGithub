@@ -1,108 +1,64 @@
 [
-    {
-      "question": "Wat is de maximale duur van een Teams-vergadering?",
-      "options": ["30 minuten", "1 uur", "4 uur", "24 uur"],
-      "answer": "24 uur"
-    },
-    {
-      "question": "Wat is een populaire jaarlijkse evenement in Eemsdelta?",
-      "options": ["De Damsterdag", "De Delfzijl Dag", "De Eemsdelta Dag", "De Appingedam Dag"],
-      "answer": "De Damsterdag"
-    },
-    {
-      "question": "Welke functie kun je gebruiken om je powerpoint te delen in een vergadering?",
-      "options": ["Powerpoint Viewer", "Scherm delen", "Vergadering opnemen", "Chat"],
-      "answer": "Scherm delen"
-    },
-    {
-      "question": "Wat is de naam van de online website van Eemsdelta?",
-      "options": ["Eemsdelta Digitaal", "Eemsdelta Online", "Intranet", "Eemsdelta School"],
-      "answer": "Intranet"
-    },
-    {
-      "question": "Wat is de maximale bestandsgrootte voor een Teams-vergadering?",
-      "options": ["10 MB", "100 MB", "1 GB", "2 GB"],
-      "answer": "2 GB"
-    },
-    {
-      "question": "Wat is de naam van de app die je kunt gebruiken om documenten te delen in Teams?",
-      "options": ["OneDrive", "SharePoint", "Word", "Excel"],
-      "answer": "SharePoint"
-    },
-    {
-      "question": "Hoe kun je het best een bestand delen in een Teams-kanaal?",
-      "options": ["Door het bestand te uploaden", "Door het bestand te kopiëren en plakken", "Door het bestand te e-mailen", "Door het bestand te verwijderen"],
-      "answer": "Door het bestand te uploaden"
-    },
-    {
-      "question": "Hoe heet de oude digitale werkplek van Eemsdelta die vanaf het zomer niet meer beschikbaar is?",
-      "options": ["Citrix", "ChatGPT", "Intranet", "Teams"],
-      "answer": "Citrix"
-    },
-    {
-      "question": "Wat is de naam van de app die je kunt gebruiken om notities te maken in Teams?",
-      "options": ["OneNote", "Word", "Excel", "PowerPoint"],
-      "answer": "OneNote"
-    },
-    {
-      "question": "Wat is het voordeel van werken aan een bestand die geupload is in Teams?",
-      "options": ["Je kunt er samen tegelijk aan werken", "Het bestand staat op je eigen harde schijf", "Je kunt het bestand makkelijker printen", "Het bestand is altijd offline beschikbaar"],
-      "answer": "Je kunt er samen tegelijk aan werken"
-    },
-    {
-      "question": "Wanneer is de gemeente Eemsdelta officieel ontstaan?",
-      "options": ["1 januari 2019", "1 maart 2020", "1 januari 2021", "1 januari 2020"],
-      "answer": "1 januari 2020"
-    },
-    {
-      "question": "Welke drie gemeenten zijn gefuseerd tot Eemsdelta?",
-      "options": ["Winsum, Appingedam, Delfzijl", "Loppersum, Appingedam, Delfzijl", "Delfzijl, Veendam, Appingedam", "Ten Boer, Appingedam, Delfzijl"],
-      "answer": "Loppersum, Appingedam, Delfzijl"
-    },
-    {
-      "question": "Wat is het grootste dorp of stad qua inwonersaantal in Eemsdelta?",
-      "options": ["Loppersum", "Appingedam", "Delfzijl", "Spijk"],
-      "answer": "Delfzijl"
-    },
-    {
-      "question": "Welke rivier/kanaal stroomt door Appingedam?",
-      "options": ["De Eems", "Het Damsterdiep", "De Hunze", "De Westerwoldse Aa"],
-      "answer": "Het Damsterdiep"
-    },
-    {
-      "question": "Wat is een bekende toeristische trekpleister in Appingedam?",
-      "options": ["De zeehondencrèche", "De hangende keukens", "Het openluchtmuseum", "De Eemshaven"],
-      "answer": "De hangende keukens"
-    },
-    {
-      "question": "Hoeveel raadsleden telt de gemeenteraad van Eemsdelta sinds 2021?",
-      "options": ["17", "21", "23", "29"],
-      "answer": "29"
-    },
-    {
-      "question": "Welke energiebron is belangrijk in de regio Eemsdelta?",
-      "options": ["Windenergie", "Waterkracht", "Steenkool", "Geothermie"],
-      "answer": "Windenergie"
-    },
-    {
-      "question": "Wat is een belangrijke industriële sector in Eemsdelta?",
-      "options": ["Toerisme", "Chemie en energie", "Wijnbouw", "Mode"],
-      "answer": "Chemie en energie"
-    },
-    {
-      "question": "Hoe word Appingedam in het Gronings dialect genoemd?",
-      "options": ["n Dam", "n Apping", "n Daam", "Appingedam"],
-      "answer": "n Daam"
-    },
-    {
-      "question": "In welk jaar werd de bouw van het Google-datacenter in Eemshaven aangekondigd?",
-      "options": ["2012", "2014", "2016", "2018"],
-      "answer": "2014"
-    },
-    {
-      "question": "Waar haalt het datacenter in Eemshaven grotendeels zijn energie vandaan?",
-      "options": ["Kolencentrales", "Kernenergie", "Windenergie", "Zonnepanelen"],
-      "answer": "Windenergie"
-    }
-  ]
+  {
+  "question": "Wat gebeurt er wanneer je een bestand rechtstreeks in een chat uploadt?",
+  "options": [
+      {"text": "kies antwoord", "value": ""},
+      {"text": "Het bestand wordt opgeslagen in je persoonlijke opslag", "value": "A"},
+      {"text": "Het bestand wordt geüpload naar SharePoint en gedeeld met de gesprekspartners", "value": "B"},
+      {"text": "Het bestand blijft lokaal op je computer staan", "value": "C"},
+      {"text": "Het bestand wordt zichtbaar voor alle leden in het team", "value": "D"}
+  ],
+  "correct": "B"
+  },
   
+  
+  
+  
+  
+  
+  {
+  "question": "Hoe kun je je meldingsinstellingen op teamniveau beheren?",
+  "options": [
+      {"text": "kies antwoord", "value": ""},
+      {"text": "Via de algemene profielinstellingen", "value": "A"},
+      {"text": "Via de specifieke instellingen van een kanaal of team", "value": "B"},
+      {"text": "Door een melding aan een eigenaar te sturen", "value": "C"},
+      {"text": "Door een wijziging aan te brengen in de agenda", "value": "D"}
+  ],
+  "correct": "B"
+  },
+  
+  
+  
+  
+  
+  {
+  "question": "Wat betekent de status \"afwezig\" in Teams?",
+  "options": [
+      {"text": "kies antwoord", "value": ""},
+      {"text": "De persoon heeft handmatig hun status op \"Afwezig\" gezet", "value": "A"},
+      {"text": "Teams detecteert inactiviteit en zet de status automatisch op \"Afwezig\"", "value": "B"},
+      {"text": "De persoon is offline en kan geen berichten ontvangen", "value": "C"},
+      {"text": "De persoon heeft Teams afgesloten en zal geen meldingen zien", "value": "D"}
+  ],
+  "correct": "B"
+  },
+  
+  
+  {
+  "question": "Wat gebeurt er als je iemand \"tagt\" in een kanaalgesprek?",
+  "options": [
+      {"text": "kies antwoord", "value": ""},
+      {"text": "Ze ontvangen een e-mail en een meldingskaart in hun dashboard", "value": "A"},
+      {"text": "Het bericht wordt bovenaan hun feed vastgemaakt", "value": "B"},
+      {"text": "Ze ontvangen direct een Teams-chatbericht", "value": "C"},
+      {"text": "Ze krijgen een melding binnen Teams en het kanaal waarin ze zijn genoemd", "value": "D"}
+  ],
+  "correct": "D"
+  }
+  
+  
+  
+  
+  
+      ]

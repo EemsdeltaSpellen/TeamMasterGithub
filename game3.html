@@ -104,119 +104,78 @@
     </script>
 
 <script>
-    var questions = [
-        {
-"question": "Hoe kun je meldingen aanpassen in Teams?",
-"options": [
-    {"text": "kies antwoord", "value": ""},
-    {"text": "Door de \"Meldingen beheren\" optie in een kanaal te gebruiken", "value": "A"},
-    {"text": "Via instellingen in je Microsoft-account", "value": "B"},
-    {"text": "Door een beheerder te raadplegen", "value": "C"},
-    {"text": "Door standaard meldingssjablonen te importeren", "value": "D"}
-],
-"correct": "A"
-},
-
-
-{
-"question": "Wat gebeurt er als je een bericht 'vastmaakt'?",
-"options": [
-    {"text": "kies antwoord", "value": ""},
-    {"text": "Het wordt zichtbaar voor iedereen in het team", "value": "A"},
-    {"text": "Het blijft bovenaan de chat staan voor alle leden", "value": "B"},
-    {"text": "Het wordt enkel opgeslagen in je persoonlijke favorieten", "value": "C"},
-    {"text": "Het is tijdelijk alleen voor jou toegankelijk", "value": "D"}
-],
-"correct": "B"
-},
-
-
-{
-"question": "Hoe plan je een vergadering in Microsoft Teams?",
-"options": [
-    {"text": "kies antwoord", "value": ""},
-    {"text": "Door een groeps-e-mail te sturen", "value": "A"},
-    {"text": "Via de \"Vergadering plannen\" optie in de agenda", "value": "B"},
-    {"text": "Door een nieuwe kanaalgroep te maken", "value": "C"},
-    {"text": "Door een groepschatbericht te starten", "value": "D"}
-],
-"correct": "B"
-},
-
-{
-"question": "Hoe stel je een statusbericht in Teams in?",
-"options": [
-    {"text": "kies antwoord", "value": ""},
-    {"text": "Via het menu \"Instellingen en privacy\"", "value": "A"},
-    {"text": "Via je agenda in Outlook", "value": "B"},
-    {"text": "Via je profielafbeelding in Teams", "value": "C"},
-    {"text": "Door een IT-beheerder te raadplegen", "value": "D"}
-],
-"correct": "C"
-}
-
-
-    ];
-
-        var selectedQuestions = [];
-        while (selectedQuestions.length < 1) {
-            var randomIndex = Math.floor(Math.random() * questions.length);
-            if (!selectedQuestions.includes(questions[randomIndex])) {
-                selectedQuestions.push(questions[randomIndex]);
-            }
-        }
-
-        var questionsContainer = document.getElementById('questions');
-        selectedQuestions.forEach(function(q, index) {
-            var questionDiv = document.createElement('div');
-            questionDiv.className = 'question';
-            questionDiv.innerHTML = `
-                <p>${index + 1}. ${q.question}</p>
-                <select name="q${index + 1}">
-                    ${q.options.map(option => `<option value="${option.value}">${option.text}</option>`).join('')}
-                </select>
-            `;
-            questionsContainer.appendChild(questionDiv);
-        });
-
-        var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
-
-        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
-        if (pogingen >= 1) {
-            var checkButton = document.getElementById('checkButton');
-            checkButton.disabled = true;
-            checkButton.classList.add('disabled');
-        }
-
-        function checkAnswers() {
-            var score = 0;
-            var totalQuestions = 1;
-            pogingen++;
-            localStorage.setItem('pogingen', pogingen);
-
-            selectedQuestions.forEach(function(q, index) {
-                var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
-                if (answer === q.correct) {
-                    score++;
-                } else {
-                    var correctOption = q.options.find(option => option.value === q.correct);
-                    document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
+    async function loadQuestions() {
+        try {
+            const response = await fetch('https://raw.githubusercontent.com/jorrinkie/website-test/main/Kantine.json');
+            questions = await response.json();
+    
+            // Select one random question
+            const selectedQuestions = [];
+            while (selectedQuestions.length < 1) {
+                const randomIndex = Math.floor(Math.random() * questions.length);
+                if (!selectedQuestions.includes(questions[randomIndex])) {
+                    selectedQuestions.push(questions[randomIndex]);
                 }
-            });
-
-            if (score === 1) {
-                document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
             }
-
+    
+            const questionsContainer = document.getElementById('questions');
+            selectedQuestions.forEach(function (q, index) {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <p>${index + 1}. ${q.question}</p>
+                    <select name="q${index + 1}">
+                        ${q.options.map(option => `<option value="${option.value}">${option.text}</option>`).join('')}
+                    </select>
+                `;
+                questionsContainer.appendChild(questionDiv);
+            });
+    
+            let pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
+            document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+    
             if (pogingen >= 1) {
-                var checkButton = document.getElementById('checkButton');
+                const checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
-
-            var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 1";
+    
+            window.checkAnswers = function () {
+                let score = 0;
+                const totalQuestions = selectedQuestions.length;
+                pogingen++;
+                localStorage.setItem('pogingen', pogingen);
+    
+                selectedQuestions.forEach(function (q, index) {
+                    const answer = document.querySelector(`select[name="q${index + 1}"]`).value;
+                    if (answer === q.correct) {
+                        score++;
+                    } else {
+                        const correctOption = q.options.find(option => option.value === q.correct);
+                        document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
+                    }
+                });
+    
+                if (score === totalQuestions) {
+                    document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
+                }
+    
+                if (pogingen >= 1) {
+                    const checkButton = document.getElementById('checkButton');
+                    checkButton.disabled = true;
+                    checkButton.classList.add('disabled');
+                }
+    
+                document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+            };
+        } catch (error) {
+            console.error("Fout bij het laden van de vragen:", error);
         }
-    </script>
+    }
+    
+    // Call the function when the script is loaded
+    loadQuestions();
+    
+        </script>
 </body>
 </html>
