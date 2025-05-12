@@ -104,16 +104,21 @@
     </script>
 
     <script>
-                let questions = [];
+        
+
+        //import quiz vragen
+        let questions = [];
 
 async function loadQuestions() {
     try {
-        const response = await fetch('https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenRaadzaal.json'); // relative path or full URL
+        const response = await fetch('https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenFlexRuimte1.json'); // relative path or full URL
         questions = await response.json();
         displayQuestion(); // call once questions are loaded
     } catch (error) {
         console.error("Fout bij het laden van de vragen:", error);
     }
+}
+loadQuestions();
 
         var selectedQuestions = [];
         while (selectedQuestions.length < 1) {
