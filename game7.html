@@ -76,7 +76,7 @@
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
-        <div class="attempts" id="attempts">Poging: 0 van 2</div>
+        <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
 
     <script type="module">
@@ -103,18 +103,18 @@
         const analytics = getAnalytics(app);
     </script>
 
-    <script>
-        var questions = [
+<script>
+    var questions = [
 {
-    "question": "Hoe kun je een privé-kanaal maken in Microsoft Teams?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Door de standaardinstellingen van een bestaand team te wijzigen", "value": "A"},
-        {"text": "Door een aanvraag in te dienen bij de IT-beheerder", "value": "B"},
-        {"text": "Door een nieuw kanaal te maken en de privacyinstelling op \"Privé\" te zetten", "value": "C"},
-        {"text": "Door je team te splitsen in kleinere groepen", "value": "D"}
-    ],
-    "correct": "C"
+"question": "Hoe kun je een privé-kanaal maken in Microsoft Teams?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Door de standaardinstellingen van een bestaand team te wijzigen", "value": "A"},
+    {"text": "Door een aanvraag in te dienen bij de IT-beheerder", "value": "B"},
+    {"text": "Door een nieuw kanaal te maken en de privacyinstelling op \"Privé\" te zetten", "value": "C"},
+    {"text": "Door je team te splitsen in kleinere groepen", "value": "D"}
+],
+"correct": "C"
 },
 
 
@@ -123,15 +123,15 @@
 
 
 {
-    "question": "Wat betekent het klokpictogram dat naast een bericht verschijnt?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Het bericht is gelezen en bevestigd", "value": "A"},
-        {"text": "Het bericht is gepland om later te worden verzonden", "value": "B"},
-        {"text": "Het bericht is aangemerkt als belangrijk door het team", "value": "C"},
-        {"text": "Het bericht bevat een vergadernotitie", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Wat betekent het klokpictogram dat naast een bericht verschijnt?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Het bericht is gelezen en bevestigd", "value": "A"},
+    {"text": "Het bericht is gepland om later te worden verzonden", "value": "B"},
+    {"text": "Het bericht is aangemerkt als belangrijk door het team", "value": "C"},
+    {"text": "Het bericht bevat een vergadernotitie", "value": "D"}
+],
+"correct": "B"
 },
 
 
@@ -140,29 +140,29 @@
 
 
 {
-    "question": "Waar kun je op klikken om snel toegang te krijgen tot een gedeeld bestand in een kanaal?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "De \"Plannen\"-tab", "value": "A"},
-        {"text": "Het \"Bestanden\"-tabblad", "value": "B"},
-        {"text": "De \"Activiteiten\"-feed", "value": "C"},
-        {"text": "De \"Wiki\"-sectie", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Waar kun je op klikken om snel toegang te krijgen tot een gedeeld bestand in een kanaal?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "De \"Plannen\"-tab", "value": "A"},
+    {"text": "Het \"Bestanden\"-tabblad", "value": "B"},
+    {"text": "De \"Activiteiten\"-feed", "value": "C"},
+    {"text": "De \"Wiki\"-sectie", "value": "D"}
+],
+"correct": "B"
 },
 
 
 
 {
-    "question": "Wat kun je aanpassen in de teamrollen van leden?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Hun toegang tot alle Microsoft 365-apps blokkeren", "value": "A"},
-        {"text": "Ze de rol van eigenaar geven of beperken tot lid", "value": "B"},
-        {"text": "Hun profielnaam wijzigen in de teamomgeving", "value": "C"},
-        {"text": "De duur van hun lidmaatschap instellen", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Wat kun je aanpassen in de teamrollen van leden?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Hun toegang tot alle Microsoft 365-apps blokkeren", "value": "A"},
+    {"text": "Ze de rol van eigenaar geven of beperken tot lid", "value": "B"},
+    {"text": "Hun profielnaam wijzigen in de teamomgeving", "value": "C"},
+    {"text": "De duur van hun lidmaatschap instellen", "value": "D"}
+],
+"correct": "B"
 }
 
 
@@ -170,10 +170,10 @@
 
 
 
-        ];
+    ];
 
         var selectedQuestions = [];
-        while (selectedQuestions.length < 2) {
+        while (selectedQuestions.length < 1) {
             var randomIndex = Math.floor(Math.random() * questions.length);
             if (!selectedQuestions.includes(questions[randomIndex])) {
                 selectedQuestions.push(questions[randomIndex]);
@@ -195,8 +195,8 @@
 
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
 
-        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 2";
-        if (pogingen >= 2) {
+        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+        if (pogingen >= 1) {
             var checkButton = document.getElementById('checkButton');
             checkButton.disabled = true;
             checkButton.classList.add('disabled');
@@ -204,7 +204,7 @@
 
         function checkAnswers() {
             var score = 0;
-            var totalQuestions = 2;
+            var totalQuestions = 1;
             pogingen++;
             localStorage.setItem('pogingen', pogingen);
 
@@ -212,24 +212,24 @@
                 var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
                 if (answer === q.correct) {
                     score++;
+                } else {
+                    var correctOption = q.options.find(option => option.value === q.correct);
+                    document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
                 }
             });
 
-            var result = document.getElementById('result');
-            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
-
-            if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag een beloning pakken van de beloningstapel";
+            if (score === 1) {
+                document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
             }
 
-            if (pogingen >= 2) {
+            if (pogingen >= 1) {
                 var checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
 
             var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 2";
+            attempts.textContent = "Poging: " + pogingen + " van 1";
         }
     </script>
 </body>

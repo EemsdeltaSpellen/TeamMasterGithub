@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Flexruimte</title>
+    <title>1e flexruimte Quiz</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -71,12 +71,12 @@
         <h2 class="heading">
             <img src="logo.png" alt="Afbeelding">
         </h2>
-        <h2>Flexruimte</h2>
+        <h2>1e flexruimte</h2>
         <div id="questions"></div>
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
-        <div class="attempts" id="attempts">Poging: 0 van 2</div>
+        <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
 
     <script type="module">
@@ -103,18 +103,18 @@
         const analytics = getAnalytics(app);
     </script>
 
-    <script>
-        var questions = [
+<script>
+    var questions = [
 {
-    "question": "Hoe kun je een vergadering direct starten in een kanaal?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Door alle teamleden handmatig een uitnodiging te sturen", "value": "A"},
-        {"text": "Door het gebruik van de \"Nu vergaderen\"-optie in dat kanaal", "value": "B"},
-        {"text": "Door een link naar een externe vergaderservice te delen", "value": "C"},
-        {"text": "Door een nieuwe chatgroep aan te maken en een oproep te doen", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Hoe kun je een vergadering direct starten in een kanaal?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Door alle teamleden handmatig een uitnodiging te sturen", "value": "A"},
+    {"text": "Door het gebruik van de \"Nu vergaderen\"-optie in dat kanaal", "value": "B"},
+    {"text": "Door een link naar een externe vergaderservice te delen", "value": "C"},
+    {"text": "Door een nieuwe chatgroep aan te maken en een oproep te doen", "value": "D"}
+],
+"correct": "B"
 },
 
 
@@ -125,15 +125,15 @@
 
 
 {
-    "question": "Hoe plan je een vergadering in Microsoft Teams?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Door een groeps-e-mail te sturen", "value": "A"},
-        {"text": "Via de \"Vergadering plannen\" optie in de agenda", "value": "B"},
-        {"text": "Door een nieuwe kanaalgroep te maken", "value": "C"},
-        {"text": "Door een groepschatbericht te starten", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Hoe plan je een vergadering in Microsoft Teams?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Door een groeps-e-mail te sturen", "value": "A"},
+    {"text": "Via de \"Vergadering plannen\" optie in de agenda", "value": "B"},
+    {"text": "Door een nieuwe kanaalgroep te maken", "value": "C"},
+    {"text": "Door een groepschatbericht te starten", "value": "D"}
+],
+"correct": "B"
 },
 
 
@@ -144,15 +144,15 @@
 
 
 {
-    "question": "Wat betekent het sterretje bij een bericht?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Het bericht is verwijderd", "value": "A"},
-        {"text": "Het bericht is gemarkeerd als favoriet", "value": "B"},
-        {"text": "Het bericht is aangepast", "value": "C"},
-        {"text": "Het bericht is gemarkeerd als spam", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Wat betekent het sterretje bij een bericht?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Het bericht is verwijderd", "value": "A"},
+    {"text": "Het bericht is gemarkeerd als favoriet", "value": "B"},
+    {"text": "Het bericht is aangepast", "value": "C"},
+    {"text": "Het bericht is gemarkeerd als spam", "value": "D"}
+],
+"correct": "B"
 },
 
 
@@ -160,15 +160,15 @@
 
 
 {
-    "question": "Hoe voeg je een nieuwe app toe aan een kanaal?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Door permissies te vragen aan de eigenaar", "value": "A"},
-        {"text": "Door naar \"Apps beheren\" te gaan in de tabbladsectie", "value": "B"},
-        {"text": "Door een koppeling in een bericht te delen", "value": "C"},
-        {"text": "Door een IT-beheerder toestemming te laten geven", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Hoe voeg je een nieuwe app toe aan een kanaal?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Door permissies te vragen aan de eigenaar", "value": "A"},
+    {"text": "Door naar \"Apps beheren\" te gaan in de tabbladsectie", "value": "B"},
+    {"text": "Door een koppeling in een bericht te delen", "value": "C"},
+    {"text": "Door een IT-beheerder toestemming te laten geven", "value": "D"}
+],
+"correct": "B"
 }
 
 
@@ -178,10 +178,10 @@
 
 
 
-        ];
+    ];
 
         var selectedQuestions = [];
-        while (selectedQuestions.length < 2) {
+        while (selectedQuestions.length < 1) {
             var randomIndex = Math.floor(Math.random() * questions.length);
             if (!selectedQuestions.includes(questions[randomIndex])) {
                 selectedQuestions.push(questions[randomIndex]);
@@ -203,8 +203,8 @@
 
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
 
-        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 2";
-        if (pogingen >= 2) {
+        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+        if (pogingen >= 1) {
             var checkButton = document.getElementById('checkButton');
             checkButton.disabled = true;
             checkButton.classList.add('disabled');
@@ -212,7 +212,7 @@
 
         function checkAnswers() {
             var score = 0;
-            var totalQuestions = 2;
+            var totalQuestions = 1;
             pogingen++;
             localStorage.setItem('pogingen', pogingen);
 
@@ -220,24 +220,24 @@
                 var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
                 if (answer === q.correct) {
                     score++;
+                } else {
+                    var correctOption = q.options.find(option => option.value === q.correct);
+                    document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
                 }
             });
 
-            var result = document.getElementById('result');
-            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
-
-            if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag een beloning pakken van de beloningstapel";
+            if (score === 1) {
+                document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
             }
 
-            if (pogingen >= 2) {
+            if (pogingen >= 1) {
                 var checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
 
             var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 2";
+            attempts.textContent = "Poging: " + pogingen + " van 1";
         }
     </script>
 </body>

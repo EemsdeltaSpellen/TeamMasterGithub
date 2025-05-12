@@ -76,7 +76,7 @@
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
-        <div class="attempts" id="attempts">Poging: 0 van 2</div>
+        <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
 
     <script type="module">
@@ -103,18 +103,18 @@
         const analytics = getAnalytics(app);
     </script>
 
-    <script>
-        var questions = [
+<script>
+    var questions = [
 {
-    "question": "Wat gebeurt er wanneer je een bestand rechtstreeks in een chat uploadt?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Het bestand wordt opgeslagen in je persoonlijke opslag", "value": "A"},
-        {"text": "Het bestand wordt geüpload naar SharePoint en gedeeld met de gesprekspartners", "value": "B"},
-        {"text": "Het bestand blijft lokaal op je computer staan", "value": "C"},
-        {"text": "Het bestand wordt zichtbaar voor alle leden in het team", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Wat gebeurt er wanneer je een bestand rechtstreeks in een chat uploadt?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Het bestand wordt opgeslagen in je persoonlijke opslag", "value": "A"},
+    {"text": "Het bestand wordt geüpload naar SharePoint en gedeeld met de gesprekspartners", "value": "B"},
+    {"text": "Het bestand blijft lokaal op je computer staan", "value": "C"},
+    {"text": "Het bestand wordt zichtbaar voor alle leden in het team", "value": "D"}
+],
+"correct": "B"
 },
 
 
@@ -123,15 +123,15 @@
 
 
 {
-    "question": "Hoe kun je je meldingsinstellingen op teamniveau beheren?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Via de algemene profielinstellingen", "value": "A"},
-        {"text": "Via de specifieke instellingen van een kanaal of team", "value": "B"},
-        {"text": "Door een melding aan een eigenaar te sturen", "value": "C"},
-        {"text": "Door een wijziging aan te brengen in de agenda", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Hoe kun je je meldingsinstellingen op teamniveau beheren?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Via de algemene profielinstellingen", "value": "A"},
+    {"text": "Via de specifieke instellingen van een kanaal of team", "value": "B"},
+    {"text": "Door een melding aan een eigenaar te sturen", "value": "C"},
+    {"text": "Door een wijziging aan te brengen in de agenda", "value": "D"}
+],
+"correct": "B"
 },
 
 
@@ -139,38 +139,38 @@
 
 
 {
-    "question": "Wat betekent de status \"afwezig\" in Teams?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "De persoon heeft handmatig hun status op \"Afwezig\" gezet", "value": "A"},
-        {"text": "Teams detecteert inactiviteit en zet de status automatisch op \"Afwezig\"", "value": "B"},
-        {"text": "De persoon is offline en kan geen berichten ontvangen", "value": "C"},
-        {"text": "De persoon heeft Teams afgesloten en zal geen meldingen zien", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Wat betekent de status \"afwezig\" in Teams?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "De persoon heeft handmatig hun status op \"Afwezig\" gezet", "value": "A"},
+    {"text": "Teams detecteert inactiviteit en zet de status automatisch op \"Afwezig\"", "value": "B"},
+    {"text": "De persoon is offline en kan geen berichten ontvangen", "value": "C"},
+    {"text": "De persoon heeft Teams afgesloten en zal geen meldingen zien", "value": "D"}
+],
+"correct": "B"
 },
 
 
 {
-    "question": "Wat gebeurt er als je iemand \"tagt\" in een kanaalgesprek?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Ze ontvangen een e-mail en een meldingskaart in hun dashboard", "value": "A"},
-        {"text": "Het bericht wordt bovenaan hun feed vastgemaakt", "value": "B"},
-        {"text": "Ze ontvangen direct een Teams-chatbericht", "value": "C"},
-        {"text": "Ze krijgen een melding binnen Teams en het kanaal waarin ze zijn genoemd", "value": "D"}
-    ],
-    "correct": "D"
+"question": "Wat gebeurt er als je iemand \"tagt\" in een kanaalgesprek?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Ze ontvangen een e-mail en een meldingskaart in hun dashboard", "value": "A"},
+    {"text": "Het bericht wordt bovenaan hun feed vastgemaakt", "value": "B"},
+    {"text": "Ze ontvangen direct een Teams-chatbericht", "value": "C"},
+    {"text": "Ze krijgen een melding binnen Teams en het kanaal waarin ze zijn genoemd", "value": "D"}
+],
+"correct": "D"
 }
 
 
 
 
 
-        ];
+    ];
 
         var selectedQuestions = [];
-        while (selectedQuestions.length < 2) {
+        while (selectedQuestions.length < 1) {
             var randomIndex = Math.floor(Math.random() * questions.length);
             if (!selectedQuestions.includes(questions[randomIndex])) {
                 selectedQuestions.push(questions[randomIndex]);
@@ -192,8 +192,8 @@
 
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
 
-        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 2";
-        if (pogingen >= 2) {
+        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+        if (pogingen >= 1) {
             var checkButton = document.getElementById('checkButton');
             checkButton.disabled = true;
             checkButton.classList.add('disabled');
@@ -201,7 +201,7 @@
 
         function checkAnswers() {
             var score = 0;
-            var totalQuestions = 2;
+            var totalQuestions = 1;
             pogingen++;
             localStorage.setItem('pogingen', pogingen);
 
@@ -209,24 +209,24 @@
                 var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
                 if (answer === q.correct) {
                     score++;
+                } else {
+                    var correctOption = q.options.find(option => option.value === q.correct);
+                    document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
                 }
             });
 
-            var result = document.getElementById('result');
-            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
-
-            if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag een beloning pakken van de beloningstapel";
+            if (score === 1) {
+                document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
             }
 
-            if (pogingen >= 2) {
+            if (pogingen >= 1) {
                 var checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
 
             var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 2";
+            attempts.textContent = "Poging: " + pogingen + " van 1";
         }
     </script>
 </body>

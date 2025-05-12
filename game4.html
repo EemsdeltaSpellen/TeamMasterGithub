@@ -71,12 +71,12 @@
         <h2 class="heading">
             <img src="logo.png" alt="Afbeelding">
         </h2>
-        <h2>Kantine</h2>
+        <h2>De printerruimte</h2>
         <div id="questions"></div>
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
-        <div class="attempts" id="attempts">Poging: 0 van 2</div>
+        <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
 
     <script type="module">
@@ -103,66 +103,66 @@
         const analytics = getAnalytics(app);
     </script>
 
-    <script>
-        var questions = [
+<script>
+    var questions = [
 {
-    "question": "Wat kun je NIET doen in een Teams-vergadering?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Scherm delen", "value": "A"},
-        {"text": "Chatberichten verzenden", "value": "B"},
-        {"text": "Realtime enquêtes uitvoeren", "value": "C"},
-        {"text": "Documenten gelijktijdig bewerken", "value": "D"}
-    ],
-    "correct": "D"
+"question": "Wat kun je NIET doen in een Teams-vergadering?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Scherm delen", "value": "A"},
+    {"text": "Chatberichten verzenden", "value": "B"},
+    {"text": "Realtime enquêtes uitvoeren", "value": "C"},
+    {"text": "Documenten gelijktijdig bewerken", "value": "D"}
+],
+"correct": "D"
 },
 
 
 
 {
-    "question": "Welke functie kun je gebruiken om met een hele groep te communiceren?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Individuele video-oproep", "value": "A"},
-        {"text": "E-mail distributielijst", "value": "B"},
-        {"text": "Kanaalgesprek", "value": "C"},
-        {"text": "Groeps-sms", "value": "D"}
-    ],
-    "correct": "C"
+"question": "Welke functie kun je gebruiken om met een hele groep te communiceren?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Individuele video-oproep", "value": "A"},
+    {"text": "E-mail distributielijst", "value": "B"},
+    {"text": "Kanaalgesprek", "value": "C"},
+    {"text": "Groeps-sms", "value": "D"}
+],
+"correct": "C"
 },
 
 
 
 {
-    "question": "Wat is Microsoft Teams?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Een platform voor klantrelatiebeheer", "value": "A"},
-        {"text": "Een samenwerkings- en communicatieplatform", "value": "B"},
-        {"text": "Een systeem voor serverbeheer", "value": "C"},
-        {"text": "Een planningshulpmiddel voor evenementen", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Wat is Microsoft Teams?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Een platform voor klantrelatiebeheer", "value": "A"},
+    {"text": "Een samenwerkings- en communicatieplatform", "value": "B"},
+    {"text": "Een systeem voor serverbeheer", "value": "C"},
+    {"text": "Een planningshulpmiddel voor evenementen", "value": "D"}
+],
+"correct": "B"
 },
 
 {
-    "question": "Hoe kun je een vergadering direct starten in een kanaal?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Door alle teamleden handmatig een uitnodiging te sturen", "value": "A"},
-        {"text": "Door het gebruik van de \"Nu vergaderen\"-optie in dat kanaal", "value": "B"},
-        {"text": "Door een link naar een externe vergaderservice te delen", "value": "C"},
-        {"text": "Door een nieuwe chatgroep aan te maken en een oproep te doen", "value": "D"}
-    ],
-    "correct": "B"
+"question": "Hoe kun je een vergadering direct starten in een kanaal?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Door alle teamleden handmatig een uitnodiging te sturen", "value": "A"},
+    {"text": "Door het gebruik van de \"Nu vergaderen\"-optie in dat kanaal", "value": "B"},
+    {"text": "Door een link naar een externe vergaderservice te delen", "value": "C"},
+    {"text": "Door een nieuwe chatgroep aan te maken en een oproep te doen", "value": "D"}
+],
+"correct": "B"
 }
 
 
 
-        ];
+    ];
 
         var selectedQuestions = [];
-        while (selectedQuestions.length < 2) {
+        while (selectedQuestions.length < 1) {
             var randomIndex = Math.floor(Math.random() * questions.length);
             if (!selectedQuestions.includes(questions[randomIndex])) {
                 selectedQuestions.push(questions[randomIndex]);
@@ -184,8 +184,8 @@
 
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
 
-        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 2";
-        if (pogingen >= 2) {
+        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+        if (pogingen >= 1) {
             var checkButton = document.getElementById('checkButton');
             checkButton.disabled = true;
             checkButton.classList.add('disabled');
@@ -193,7 +193,7 @@
 
         function checkAnswers() {
             var score = 0;
-            var totalQuestions = 2;
+            var totalQuestions = 1;
             pogingen++;
             localStorage.setItem('pogingen', pogingen);
 
@@ -201,24 +201,24 @@
                 var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
                 if (answer === q.correct) {
                     score++;
+                } else {
+                    var correctOption = q.options.find(option => option.value === q.correct);
+                    document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
                 }
             });
 
-            var result = document.getElementById('result');
-            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
-
-            if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag een beloning pakken van de beloningstapel";
+            if (score === 1) {
+                document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
             }
 
-            if (pogingen >= 2) {
+            if (pogingen >= 1) {
                 var checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
 
             var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 2";
+            attempts.textContent = "Poging: " + pogingen + " van 1";
         }
     </script>
 </body>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Archief</title>
+    <title>Het Archief</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -71,12 +71,12 @@
         <h2 class="heading">
             <img src="logo.png" alt="Afbeelding">
         </h2>
-        <h2>Archief</h2>
+        <h2>Het archief</h2>
         <div id="questions"></div>
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
         <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
-        <div class="attempts" id="attempts">Poging: 0 van 2</div>
+        <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
 
     <script type="module">
@@ -103,18 +103,18 @@
         const analytics = getAnalytics(app);
     </script>
 
-    <script>
-        var questions = [
+<script>
+    var questions = [
 {
-    "question": "Wat betekent de term \"activiteitsfeed\" in Teams?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Een samenvatting van alle meldingen en belangrijke gebeurtenissen", "value": "A"},
-        {"text": "Een automatische herinnering voor niet-gelezen berichten", "value": "B"},
-        {"text": "Een plek waar teams dagelijkse rapporten delen", "value": "C"},
-        {"text": "Een weergave van alle geplande vergaderingen", "value": "D"}
-    ],
-    "correct": "A"
+"question": "Wat betekent de term \"activiteitsfeed\" in Teams?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Een samenvatting van alle meldingen en belangrijke gebeurtenissen", "value": "A"},
+    {"text": "Een automatische herinnering voor niet-gelezen berichten", "value": "B"},
+    {"text": "Een plek waar teams dagelijkse rapporten delen", "value": "C"},
+    {"text": "Een weergave van alle geplande vergaderingen", "value": "D"}
+],
+"correct": "A"
 },
 
 
@@ -122,51 +122,51 @@
 
 
 {
-    "question": "Wat kun je gebruiken om samen te werken aan een Excel-bestand binnen Teams?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Het bestand downloaden en opnieuw uploaden na wijzigingen", "value": "A"},
-        {"text": "Live samenwerking via de geïntegreerde Office 365-tools", "value": "B"},
-        {"text": "Een apart tabblad instellen in OneDrive", "value": "C"}
-    ],
-    "correct": "B"
+"question": "Wat kun je gebruiken om samen te werken aan een Excel-bestand binnen Teams?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Het bestand downloaden en opnieuw uploaden na wijzigingen", "value": "A"},
+    {"text": "Live samenwerking via de geïntegreerde Office 365-tools", "value": "B"},
+    {"text": "Een apart tabblad instellen in OneDrive", "value": "C"}
+],
+"correct": "B"
 },
 
 
 
 
 {
-    "question": "Wat moet je doen om een vastgemaakt bericht in een kanaal te verwijderen?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Op de \"Ongedaan maken\"-knop drukken in het meldingenpaneel", "value": "A"},
-        {"text": "De eigenaar van het kanaal vragen om het te verwijderen", "value": "B"},
-        {"text": "Op \"Losmaken\" klikken bij het vastgemaakte bericht", "value": "C"},
-        {"text": "Het bericht archiveren via de tabbladopties", "value": "D"}
-    ],
-    "correct": "C"
+"question": "Wat moet je doen om een vastgemaakt bericht in een kanaal te verwijderen?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Op de \"Ongedaan maken\"-knop drukken in het meldingenpaneel", "value": "A"},
+    {"text": "De eigenaar van het kanaal vragen om het te verwijderen", "value": "B"},
+    {"text": "Op \"Losmaken\" klikken bij het vastgemaakte bericht", "value": "C"},
+    {"text": "Het bericht archiveren via de tabbladopties", "value": "D"}
+],
+"correct": "C"
 },
 
 
 {
-    "question": "Welke rol speelt de \"Planner\"-app in Microsoft Teams?",
-    "options": [
-        {"text": "kies antwoord", "value": ""},
-        {"text": "Het organiseren en beheren van taken en projectdeadlines", "value": "A"},
-        {"text": "Het bijhouden van persoonlijke vergaderingen", "value": "B"},
-        {"text": "Het ondersteunen van cloudopslag en documentenbeheer", "value": "C"},
-        {"text": "Het maken van samenvattingen na teamvergaderingen", "value": "D"}
-    ],
-    "correct": "A"
+"question": "Welke rol speelt de \"Planner\"-app in Microsoft Teams?",
+"options": [
+    {"text": "kies antwoord", "value": ""},
+    {"text": "Het organiseren en beheren van taken en projectdeadlines", "value": "A"},
+    {"text": "Het bijhouden van persoonlijke vergaderingen", "value": "B"},
+    {"text": "Het ondersteunen van cloudopslag en documentenbeheer", "value": "C"},
+    {"text": "Het maken van samenvattingen na teamvergaderingen", "value": "D"}
+],
+"correct": "A"
 }
 
 
 
 
-        ];
+    ];
 
         var selectedQuestions = [];
-        while (selectedQuestions.length < 2) {
+        while (selectedQuestions.length < 1) {
             var randomIndex = Math.floor(Math.random() * questions.length);
             if (!selectedQuestions.includes(questions[randomIndex])) {
                 selectedQuestions.push(questions[randomIndex]);
@@ -188,8 +188,8 @@
 
         var pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
 
-        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 2";
-        if (pogingen >= 2) {
+        document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+        if (pogingen >= 1) {
             var checkButton = document.getElementById('checkButton');
             checkButton.disabled = true;
             checkButton.classList.add('disabled');
@@ -197,7 +197,7 @@
 
         function checkAnswers() {
             var score = 0;
-            var totalQuestions = 2;
+            var totalQuestions = 1;
             pogingen++;
             localStorage.setItem('pogingen', pogingen);
 
@@ -205,24 +205,24 @@
                 var answer = document.querySelector(`select[name="q${index + 1}"]`).value;
                 if (answer === q.correct) {
                     score++;
+                } else {
+                    var correctOption = q.options.find(option => option.value === q.correct);
+                    document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
                 }
             });
 
-            var result = document.getElementById('result');
-            result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed!";
-
-            if (score == 2) {
-                result.textContent = "Je hebt " + score + " van de " + totalQuestions + " vragen goed! Je mag een beloning pakken van de beloningstapel";
+            if (score === 1) {
+                document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
             }
 
-            if (pogingen >= 2) {
+            if (pogingen >= 1) {
                 var checkButton = document.getElementById('checkButton');
                 checkButton.disabled = true;
                 checkButton.classList.add('disabled');
             }
 
             var attempts = document.getElementById('attempts');
-            attempts.textContent = "Poging: " + pogingen + " van 2";
+            attempts.textContent = "Poging: " + pogingen + " van 1";
         }
     </script>
 </body>
