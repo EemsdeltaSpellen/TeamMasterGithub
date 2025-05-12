@@ -74,7 +74,7 @@
         <h2>1e flexruimte</h2>
         <div id="questions"></div>
         <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
-        <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
+        <button id="resetButton" onclick="sessionStorage.removeItem('pogingen'); location.reload();">Reset</button>
         <div class="result" id="result"></div>
         <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
@@ -131,7 +131,7 @@
                 questionsContainer.appendChild(questionDiv);
             });
     
-            let pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
+            let pogingen = parseInt(sessionStorage.getItem('pogingen')) || 0;
             document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
     
             if (pogingen >= 1) {
@@ -144,7 +144,7 @@
                 let score = 0;
                 const totalQuestions = selectedQuestions.length;
                 pogingen++;
-                localStorage.setItem('pogingen', pogingen);
+                sessionStorage.setItem('pogingen', pogingen);
     
                 selectedQuestions.forEach(function (q, index) {
                     const answer = document.querySelector(`select[name="q${index + 1}"]`).value;
