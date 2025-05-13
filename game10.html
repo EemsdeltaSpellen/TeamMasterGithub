@@ -283,116 +283,64 @@
         }
 
 
-
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        // User is signed in
-        console.log("User signed in:", user.uid);
         authForm.style.display = 'none';
         secretContent.style.display = 'none';
         waitingScreen.style.display = 'block';
 
-        // Ensure the game session document exists and has a readyUsers array.
-        // Using merge: true prevents overwriting other fields if the document already exists.
-        // This is a safe initial step before attempting to add the user to the array.
+        // Maak de sessiedocument aan als het nog niet bestaat
         try {
             await setDoc(sessionRef, { readyUsers: [] }, { merge: true });
-            console.log("Game session document ensured/initialized.");
+            console.log("Game session document created or updated.");
         } catch (error) {
-            console.error("Error ensuring game session document:", error);
-            // If we can't even ensure the document exists, something is wrong.
-            // Log out the user as a safe measure.
+            console.error("Error creating/updating game session document:", error);
+            // Als er een fout is, log de gebruiker uit
             await signOut(auth);
-            return; // Stop processing if setDoc fails
+            return;
         }
 
-        // *** KEY CHANGE HERE ***
-        // Directly add the user's UID to the readyUsers array using arrayUnion.
-        // arrayUnion is an atomic operation on the server. It ensures the UID
-        // is added *only if it's not already present* in the array, without
-        // needing to read the document's current state first.
-        try {
+        // Haal de huidige readyUsers op
+        const docSnap = await getDoc(sessionRef);
+        const data = docSnap.data();
+        const readyUsers = data?.readyUsers || [];
+
+        // Voeg de gebruiker alleen toe als deze nog niet in de array zit
+        if (!readyUsers.includes(user.uid)) {
             await updateDoc(sessionRef, {
                 readyUsers: arrayUnion(user.uid)
             });
-            console.log(`Attempted to add user ${user.uid} to readyUsers array.`);
-            // Note: arrayUnion itself doesn't throw an error if the item was already there.
-            // It only throws an error if the update operation itself fails (e.g., permissions, network).
-        } catch (error) {
-            console.error("Error adding user UID to readyUsers array:", error);
-            // Handle error adding user to array, potentially sign out if critical
-            await signOut(auth); // Log out if we fail to register them as ready
-            return; // Stop processing if updateDoc fails
         }
 
-        // Listen for changes to the game session document.
-        // This listener will react when readyUsers changes (including when the other player joins)
-        // and when the startTime is eventually set.
-        // We add an error handler to the listener itself for robustness.
-        const unsubscribe = onSnapshot(sessionRef, (docSnap) => {
+        // Luister naar starttijd en start de quiz wanneer beide gebruikers klaar zijn
+        onSnapshot(sessionRef, (docSnap) => {
             const data = docSnap.data();
+            if (data && data.startTime) {
+                const startTime = new Date(data.startTime);
+                const now = new Date();
+                const delay = startTime - now;
 
-            if (data) { // Check if data exists (document hasn't been deleted)
-                console.log("Game session data updated:", data);
-
-                // Logic to start the game based on startTime
-                if (data.startTime) {
-                    const startTime = new Date(data.startTime);
-                    const now = new Date();
-                    const delay = startTime.getTime() - now.getTime(); // Calculate delay in milliseconds
-
-                    console.log(`Game scheduled to start at ${startTime.toISOString()}`);
-                    console.log(`Current time: ${now.toISOString()}`);
-                    console.log(`Delay: ${delay}ms`);
-
-
-                    if (delay > 0) {
-                        console.log(`Starting game in ${delay}ms.`);
-                        // Use setTimeout to wait for the scheduled start time
-                        setTimeout(startQuiz, delay);
-                    } else {
-                         // If delay is 0 or negative, start immediately (shouldn't happen
-                         // with the 5-second buffer, but handles potential clock drift)
-                        console.log("Starting game immediately (delay <= 0).");
-                        startQuiz();
-                    }
-
-                    // Once the game is starting (startTime is present), we can stop listening
-                    // to this specific snapshot listener to avoid unnecessary triggers.
-                    // However, you might need to keep listening for other game state changes
-                    // within the session document, depending on your full game logic.
-                    // For just *starting* the game based on time, unsubscribing is good practice.
-                    // If you need the listener for game progression, keep it.
-                    // For this example, I'll keep it as you might add more logic later.
-
+                if (delay > 0) {
+                    setTimeout(startQuiz, delay);
                 } else {
-                    // startTime is not set yet, check if we need to set it.
-                    // This assumes a 2-player game ready when readyUsers has 2 UIDs.
-                    const currentReadyUsers = data.readyUsers || [];
-                    console.log(`Current ready users count: ${currentReadyUsers.length}`);
-
-                    if (currentReadyUsers.length === 2 && !data.startTime) {
-                        console.log("Two users ready, setting start time in 5 seconds.");
-                        const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
-                        updateDoc(sessionRef, {
-                            startTime: futureTime.toISOString()
-                        }).catch(error => {
-                            console.error("Error setting startTime:", error);
-                            // Handle error setting start time - maybe show an error message?
-                        });
-                    } else {
-                        console.log("Waiting for 2 players or start time.");
-                    }
+                    startQuiz();
                 }
-            } else {
-                // If the document data is null, it means the document was deleted.
-                console.warn("Game session document no longer exists during onSnapshot listener.");
-                // The game session is gone. Sign out or show a specific error.
-                // Signing out is a reasonable default action.
-                signOut(auth);
             }
-        },
 
+            // Stel automatisch de starttijd in wanneer beide gebruikers klaar zijn
+            if (data.readyUsers.length === 2 && !data.startTime) {
+                const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
+                updateDoc(sessionRef, {
+                    startTime: futureTime.toISOString()
+                });
+            }
+        });
+    } else {
+        authForm.style.display = 'block';
+        secretContent.style.display = 'none';
+        waitingScreen.style.display = 'none';
+    }
+});
 
 
 
