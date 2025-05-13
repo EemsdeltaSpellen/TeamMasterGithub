@@ -282,34 +282,37 @@
             })
         }
 
+
 onAuthStateChanged(auth, async (user) => {
-    if(user) {
+    if (user) {
         authForm.style.display = 'none';
         secretContent.style.display = 'none';
         waitingScreen.style.display = 'block';
 
-            // Create the session document if it doesn't exist
-    // You might want to check if it exists first or handle the error if it doesn't.
-    // A simple way to ensure it exists with initial data:
-    try {
-        await setDoc(sessionRef, { readyUsers: [] }, { merge: true }); // Use merge: true to not overwrite if it exists
-        console.log("Game session document created or updated.");
-    } catch (error) {
-        console.error("Error creating/updating game session document:", error);
-        // Handle error appropriately - maybe the user can't join
-        await signOut(auth); // Log out the user if the session can't be created
-        return; // Stop further execution in this block
-    }
+        // Maak de sessiedocument aan als het nog niet bestaat
+        try {
+            await setDoc(sessionRef, { readyUsers: [] }, { merge: true });
+            console.log("Game session document created or updated.");
+        } catch (error) {
+            console.error("Error creating/updating game session document:", error);
+            // Als er een fout is, log de gebruiker uit
+            await signOut(auth);
+            return;
+        }
 
+        // Haal de huidige readyUsers op
+        const docSnap = await getDoc(sessionRef);
+        const data = docSnap.data();
+        const readyUsers = data?.readyUsers || [];
 
+        // Voeg de gebruiker alleen toe als deze nog niet in de array zit
+        if (!readyUsers.includes(user.uid)) {
+            await updateDoc(sessionRef, {
+                readyUsers: arrayUnion(user.uid)
+            });
+        }
 
-
-        // Register user as "ready"
-        await updateDoc(sessionRef, {
-            readyUsers: arrayUnion(user.uid)
-        });
-
-        // Listen for startTime
+        // Luister naar starttijd en start de quiz wanneer beide gebruikers klaar zijn
         onSnapshot(sessionRef, (docSnap) => {
             const data = docSnap.data();
             if (data && data.startTime) {
@@ -324,7 +327,7 @@ onAuthStateChanged(auth, async (user) => {
                 }
             }
 
-            // Automatically set startTime when 2 users ready
+            // Stel automatisch de starttijd in wanneer beide gebruikers klaar zijn
             if (data.readyUsers.length === 2 && !data.startTime) {
                 const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
                 updateDoc(sessionRef, {
@@ -338,6 +341,10 @@ onAuthStateChanged(auth, async (user) => {
         waitingScreen.style.display = 'none';
     }
 });
+
+
+
+
 
         function startQuiz() {
             waitingScreen.style.display = 'none';
