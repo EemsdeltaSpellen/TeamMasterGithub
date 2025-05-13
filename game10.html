@@ -225,7 +225,7 @@
         secretContent.style.display = 'none';
 
         const userSignUp = async() => {
-            const signUpEmail = userEmail.value + "@fakedomain.com";
+            const signUpEmail = userEmail.value + "@FakeDomainEemsdelta.com";
             const signUpPassword = userPassword.value;
             createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
             .then((userCredential) => {
@@ -241,7 +241,7 @@
         }
 
         const userSignIn = async() => {
-            const signInEmail = userEmail.value +  "@gmail.com";	
+            const signInEmail = userEmail.value +  "@FakeDomainEemsdelta.com";	
             const signInPassword = userPassword.value;
             signInWithEmailAndPassword(auth, signInEmail, signInPassword)
             .then((userCredential) => {
