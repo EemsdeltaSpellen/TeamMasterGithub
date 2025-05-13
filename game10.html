@@ -329,7 +329,9 @@ onAuthStateChanged(auth, async (user) => {
                 const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
                 updateDoc(sessionRef, {
                     startTime: futureTime.toISOString()
+                    
                 });
+                alert("2 mensen zijn klaar, quiz start over 5 seconden");
             }
         });
     } else {
