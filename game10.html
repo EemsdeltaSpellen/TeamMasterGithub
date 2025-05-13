@@ -82,7 +82,7 @@
         }
         
         /* Grotere quiz knoppen */
-        #submitButton, #signOutButton {
+        #submitButton, #signOutButton, #signOutButton2 {
             font-size: 1.3em;
             padding: 15px 30px;
             margin: 15px;
@@ -149,6 +149,12 @@
         </div>
     </div>
 
+    <div id="waitingScreen" style="display: none;">
+    <h1>Wachten op een andere speler...</h1>
+    <p>De quiz begint zodra beide spelers klaar zijn.</p>
+    <button id="signOutButton2">Uitloggen</button>
+</div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         import {
@@ -162,11 +168,15 @@
             getFirestore,
             doc,
             collection,
-            setDoc,
+            setDoc, 
             query,
+            updateDoc,
+            arrayUnion,
+            arrayRemove, 
             getDocs,
             orderBy,
-            limit
+            limit,
+            onSnapshot
         } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
        
         const firebaseConfig = {
@@ -180,17 +190,34 @@
             measurementId: "G-6W7B65HCJX"
         };
 
+
+
+
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+
+        //test \/
+        const sessionRef = doc(db, "gameSession", "current");
+        //test /\
+
+
+
+
+
+
 
         const userEmail = document.querySelector("#userEmail");
         const userPassword = document.querySelector("#userPassword");
         const authForm = document.querySelector("#authForm");
         const secretContent = document.querySelector("#secretContent");
+        const waitingScreen = document.querySelector("#waitingScreen");
         const signUpButton = document.querySelector("#signUpButton");
         const signInButton = document.querySelector("#signInButton");
         const signOutButton = document.querySelector("#signOutButton");
+        const signOutButton2 = document.querySelector("#signOutButton2");
         const submitButton = document.querySelector("#submitButton");
         const highScoreMessage = document.querySelector("#highScoreMessage");
         const timerDisplay = document.querySelector("#timer");
@@ -225,7 +252,7 @@
         secretContent.style.display = 'none';
 
         const userSignUp = async() => {
-            const signUpEmail = userEmail.value + "@FakeDomainEemsdelta.com";
+            const signUpEmail = userEmail.value + "@gmail.com";
             const signUpPassword = userPassword.value;
             createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
             .then((userCredential) => {
@@ -241,12 +268,12 @@
         }
 
         const userSignIn = async() => {
-            const signInEmail = userEmail.value +  "@FakeDomainEemsdelta.com";	
+            const signInEmail = userEmail.value +  "@gmail.com";	
             const signInPassword = userPassword.value;
             signInWithEmailAndPassword(auth, signInEmail, signInPassword)
             .then((userCredential) => {
                 const user = userCredential.user;
-                alert("Succesvol ingelogd! Zodra je op OK klikt gaat de timer lopen");
+                alert("Succesvol ingelogd! Zodra je op OK/SLUIT klikt kom je in het wachtscherm");
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -255,25 +282,73 @@
             })
         }
 
-        const checkAuthState = async() => {
-            onAuthStateChanged(auth, user => {
-                if(user) {
-                    authForm.style.display = 'none';
-                    secretContent.style.display = 'block';
-                    resetQuiz();
-                    displayQuestion();
-                    loadQuestions();
-                    displayHighScore();
-                    startTimer();
+onAuthStateChanged(auth, async (user) => {
+    if(user) {
+        authForm.style.display = 'none';
+        secretContent.style.display = 'none';
+        waitingScreen.style.display = 'block';
+
+            // Create the session document if it doesn't exist
+    // You might want to check if it exists first or handle the error if it doesn't.
+    // A simple way to ensure it exists with initial data:
+    try {
+        await setDoc(sessionRef, { readyUsers: [] }, { merge: true }); // Use merge: true to not overwrite if it exists
+        console.log("Game session document created or updated.");
+    } catch (error) {
+        console.error("Error creating/updating game session document:", error);
+        // Handle error appropriately - maybe the user can't join
+        await signOut(auth); // Log out the user if the session can't be created
+        return; // Stop further execution in this block
+    }
+
+
+
+
+        // Register user as "ready"
+        await updateDoc(sessionRef, {
+            readyUsers: arrayUnion(user.uid)
+        });
+
+        // Listen for startTime
+        onSnapshot(sessionRef, (docSnap) => {
+            const data = docSnap.data();
+            if (data && data.startTime) {
+                const startTime = new Date(data.startTime);
+                const now = new Date();
+                const delay = startTime - now;
+
+                if (delay > 0) {
+                    setTimeout(startQuiz, delay);
+                } else {
+                    startQuiz();
                 }
-                else {
-                    authForm.style.display = 'block';
-                    secretContent.style.display = 'none';
-                    questionSpace.innerHTML = "";
-                    clearInterval(timer);
-                }
-            })
+            }
+
+            // Automatically set startTime when 2 users ready
+            if (data.readyUsers.length === 2 && !data.startTime) {
+                const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
+                updateDoc(sessionRef, {
+                    startTime: futureTime.toISOString()
+                });
+            }
+        });
+    } else {
+        authForm.style.display = 'block';
+        secretContent.style.display = 'none';
+        waitingScreen.style.display = 'none';
+    }
+});
+
+        function startQuiz() {
+            waitingScreen.style.display = 'none';
+            secretContent.style.display = 'block';
+            resetQuiz();
+            loadQuestions();
+            displayHighScore();
+            startTimer();
         }
+
+
 
         function resetQuiz() {
             // Reset quiz status
@@ -291,16 +366,35 @@
             timerDisplay.textContent = `Tijd over: ${timeLeft} seconden`;
             incorrectAnswersDiv.style.display = 'none';
             incorrectAnswersList.innerHTML = '';
+            
         }
 
-        const userSignOut = async() => {
-            const confirmSignOut = confirm("Weet je zeker dat je wilt uitloggen? Je huidige quiz wordt beëindigd en je zult deze opnieuw moeten doen.");
-            if (confirmSignOut) {
-                await signOut(auth);
+
+
+
+        
+const userSignOut = async () => {
+    const confirmSignOut = confirm("Weet je zeker dat je wilt uitloggen? Je huidige quiz wordt beëindigd en je zult deze opnieuw moeten doen.");
+    if (confirmSignOut) {
+        const user = auth.currentUser;
+        if (user) {
+            try {
+                // Verwijder user uit 'readyUsers'
+                await updateDoc(sessionRef, {
+                    readyUsers: arrayRemove(user.uid)
+                });
+            } catch (error) {
+                console.error("Fout bij resetten van readyUsers:", error);
             }
         }
 
-        checkAuthState();
+        // Log de gebruiker uit
+        await signOut(auth);
+    }
+};
+
+
+      
 
         // Timer functies
         function startTimer() {
@@ -452,6 +546,7 @@
         signUpButton.addEventListener('click', userSignUp);
         signInButton.addEventListener('click', userSignIn);
         signOutButton.addEventListener('click', userSignOut);
+        signOutButton2.addEventListener('click', userSignOut);
         submitButton.addEventListener('click', submit);
     </script>
 </body>
