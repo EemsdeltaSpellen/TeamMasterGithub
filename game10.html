@@ -227,8 +227,7 @@
         const incorrectAnswersList = document.querySelector("#incorrectAnswersList");
         const incorrectAnswersDiv = document.querySelector("#incorrectAnswers");
         
-        const sessionSnap = await getDoc(sessionRef);
-        const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
+
 
         let timer;
         let timeLeft = 60;
@@ -290,7 +289,9 @@ onAuthStateChanged(auth, async (user) => {
         authForm.style.display = 'none';
         secretContent.style.display = 'none';
         waitingScreen.style.display = 'block';
-
+        
+        const sessionSnap = await getDoc(sessionRef);
+        const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
             // Create the session document if it doesn't exist
     // You might want to check if it exists first or handle the error if it doesn't.
     // A simple way to ensure it exists with initial data:
@@ -393,29 +394,36 @@ const userSignOut = async () => {
     if (confirmSignOut) {
         const user = auth.currentUser;
         if (user) {
-    try {
-        const sessionSnap = await getDoc(sessionRef);
-        const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
+            try {
+                const sessionSnap = await getDoc(sessionRef);
+                const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
 
-        const updates = {};
-        if (sessionData.readyUser === user.uid) {
-            updates.readyUser = null;
+                const updates = {};
+                let shouldResetSession = false;
+
+                if (sessionData.readyUser === user.uid) {
+                    updates.readyUser = null;
+                    shouldResetSession = true;
+                }
+                if (sessionData.readyUser2 === user.uid) {
+                    updates.readyUser2 = null;
+                    shouldResetSession = true;
+                }
+
+                if (shouldResetSession) {
+                    updates.startTime = null; // <-- This line resets the auto-start
+                    await updateDoc(sessionRef, updates);
+                }
+            } catch (error) {
+                console.error("Fout bij resetten van gebruikersstatus:", error);
+            }
         }
-        if (sessionData.readyUser2 === user.uid) {
-            updates.readyUser2 = null;
-        }
-
-        await updateDoc(sessionRef, updates);
-    } catch (error) {
-        console.error("Fout bij resetten van gebruikersstatus:", error);
-    }
-}
-
 
         // Log de gebruiker uit
         await signOut(auth);
     }
 };
+
 
 
       
