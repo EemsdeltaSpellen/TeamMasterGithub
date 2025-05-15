@@ -169,11 +169,11 @@
             doc,
             collection,
             setDoc, 
+            getDoc,
             query,
             updateDoc,
             arrayUnion,
             arrayRemove, 
-            getDocs,
             orderBy,
             limit,
             onSnapshot
@@ -226,6 +226,9 @@
         const scoreSpace = document.querySelector("#scoreSpace");
         const incorrectAnswersList = document.querySelector("#incorrectAnswersList");
         const incorrectAnswersDiv = document.querySelector("#incorrectAnswers");
+        
+        const sessionSnap = await getDoc(sessionRef);
+        const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
 
         let timer;
         let timeLeft = 60;
@@ -304,10 +307,20 @@ onAuthStateChanged(auth, async (user) => {
 
 
 
-        // Register user as "ready"
-        await updateDoc(sessionRef, {
-            readyUsers: arrayUnion(user.uid)
-        });
+
+
+
+if (!sessionData.readyUser) {
+    await updateDoc(sessionRef, { readyUser: user.uid });
+} else if (!sessionData.readyUser2 && sessionData.readyUser !== user.uid) {
+    await updateDoc(sessionRef, { readyUser2: user.uid });
+} else if (sessionData.readyUser === user.uid || sessionData.readyUser2 === user.uid) {
+    console.log("Gebruiker is al geregistreerd als klaar.");
+} else {
+    alert("Er zijn al 2 spelers klaar. Wacht op de volgende ronde.");
+    await signOut(auth);
+    return;
+}
 
         // Listen for startTime
         onSnapshot(sessionRef, (docSnap) => {
@@ -324,16 +337,16 @@ onAuthStateChanged(auth, async (user) => {
                 }
             }
 
-            // Automatically set startTime when 2 users ready
-            if (data.readyUsers.length === 2 && !data.startTime) {
+            // Check both users are present before starting
+            if (data.readyUser && data.readyUser2 && !data.startTime) {
                 const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
                 updateDoc(sessionRef, {
                     startTime: futureTime.toISOString()
-                    
                 });
                 alert("2 mensen zijn klaar, quiz start over 5 seconden");
             }
         });
+
     } else {
         authForm.style.display = 'block';
         secretContent.style.display = 'none';
@@ -380,15 +393,24 @@ const userSignOut = async () => {
     if (confirmSignOut) {
         const user = auth.currentUser;
         if (user) {
-            try {
-                // Verwijder user uit 'readyUsers'
-                await updateDoc(sessionRef, {
-                    readyUsers: arrayRemove(user.uid)
-                });
-            } catch (error) {
-                console.error("Fout bij resetten van readyUsers:", error);
-            }
+    try {
+        const sessionSnap = await getDoc(sessionRef);
+        const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
+
+        const updates = {};
+        if (sessionData.readyUser === user.uid) {
+            updates.readyUser = null;
         }
+        if (sessionData.readyUser2 === user.uid) {
+            updates.readyUser2 = null;
+        }
+
+        await updateDoc(sessionRef, updates);
+    } catch (error) {
+        console.error("Fout bij resetten van gebruikersstatus:", error);
+    }
+}
+
 
         // Log de gebruiker uit
         await signOut(auth);
