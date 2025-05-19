@@ -237,6 +237,46 @@
         let currentQuestionIndex;
         let incorrectAnswers = [];
 
+window.addEventListener("beforeunload", async (e) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+        const sessionSnap = await getDoc(sessionRef);
+        const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
+        const updates = {};
+        let changed = false;
+
+        if (sessionData.readyUser === user.uid) {
+            updates.readyUser = null;
+            changed = true;
+        }
+
+        if (sessionData.readyUser2 === user.uid) {
+            updates.readyUser2 = null;
+            changed = true;
+        }
+
+        if (changed) {
+            updates.startTime = null; // reset starttijd
+            await updateDoc(sessionRef, updates);
+        }
+    } catch (error) {
+        console.error("Fout bij automatisch resetten tijdens afsluiten:", error);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
         // Quiz vragen
         let questions = [];
 
