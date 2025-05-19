@@ -266,6 +266,38 @@ window.addEventListener("beforeunload", async (e) => {
     }
 });
 
+document.addEventListener("visibilitychange", async () => {
+    if (document.visibilityState === "hidden") {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+            const sessionSnap = await getDoc(sessionRef);
+            const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
+            const updates = {};
+            let changed = false;
+
+            if (sessionData.readyUser === user.uid) {
+                updates.readyUser = null;
+                changed = true;
+            }
+
+            if (sessionData.readyUser2 === user.uid) {
+                updates.readyUser2 = null;
+                changed = true;
+            }
+
+            if (changed) {
+                updates.startTime = null;
+                await updateDoc(sessionRef, updates);
+            }
+        } catch (error) {
+            console.error("Fout bij visibilitychange:", error);
+        }
+    }
+});
+
+
 
 
 
