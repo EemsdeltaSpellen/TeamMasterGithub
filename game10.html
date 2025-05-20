@@ -463,7 +463,8 @@ onSnapshot(sessionRef, (docSnap) => {
             secretContent.style.display = 'block';
             resetQuiz();
             loadQuestions();
-            displayHighScore();
+          
+        
             startTimer();
         }
 
@@ -613,7 +614,7 @@ const userSignOut = async () => {
             scoreSpace.innerHTML = "Je eindscore is " + score + " van de " + questions.length + " vragen goed";
             const finalScore = score;
             saveUserScore(finalScore);
-            displayHighScore();
+  
             displayIncorrectAnswers();
         }
 
@@ -638,13 +639,17 @@ const userSignOut = async () => {
 
 
         function displayIncorrectAnswers() {
-            incorrectAnswersDiv.style.display = 'block';
-            incorrectAnswers.forEach(answer => {
-                const li = document.createElement("li");
-                li.textContent = `Vraag: ${answer.question}, Jouw antwoord: ${answer.selectedAnswer}, Correct antwoord: ${answer.correctAnswer}`;
-                incorrectAnswersList.appendChild(li);
-            });
-        }
+    incorrectAnswersDiv.style.display = 'block';
+    incorrectAnswersList.innerHTML = ""; // Reset list
+    incorrectAnswers.forEach(answer => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>Vraag:</strong> ${answer.question}<br>
+                        <strong>Jouw antwoord:</strong> ${answer.selectedAnswer || "Geen antwoord"}<br>
+                        <strong>Correct antwoord:</strong> ${answer.correctAnswer}`;
+        incorrectAnswersList.appendChild(li);
+    });
+}
+
 
         signUpButton.addEventListener('click', userSignUp);
         signInButton.addEventListener('click', userSignIn);
