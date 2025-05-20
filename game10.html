@@ -82,7 +82,7 @@
         }
         
         /* Grotere quiz knoppen */
-        #submitButton, #signOutButton, #signOutButton2 {
+        #submitButton, #signOutButton, #signOutButton2, #signOutButton3 {
             font-size: 1.3em;
             padding: 15px 30px;
             margin: 15px;
@@ -153,6 +153,15 @@
     <h1>Wachten op een andere speler...</h1>
     <p>De quiz begint zodra beide spelers klaar zijn.</p>
     <button id="signOutButton2">Uitloggen</button>
+    </div>
+        <div id="AdminScherm" style="display: none;">
+        <h1>Admin Scherm</h1>
+        <p>Hier kan je het niveau van de quiz en de vragen beheren.</p>
+        <button id="signOutButton3">Uitloggen</button>
+        </div>
+
+
+        
 </div>
 
     <script type="module">
@@ -214,10 +223,12 @@
         const authForm = document.querySelector("#authForm");
         const secretContent = document.querySelector("#secretContent");
         const waitingScreen = document.querySelector("#waitingScreen");
+        const adminScreen = document.querySelector("#AdminScherm");
         const signUpButton = document.querySelector("#signUpButton");
         const signInButton = document.querySelector("#signInButton");
         const signOutButton = document.querySelector("#signOutButton");
         const signOutButton2 = document.querySelector("#signOutButton2");
+        const signOutButton3 = document.querySelector("#signOutButton3");
         const submitButton = document.querySelector("#submitButton");
         const highScoreMessage = document.querySelector("#highScoreMessage");
         const timerDisplay = document.querySelector("#timer");
@@ -342,7 +353,7 @@ document.addEventListener("visibilitychange", async () => {
         }
 
         const userSignIn = async() => {
-            const signInEmail = userEmail.value +  "@gmail.com";	
+            const signInEmail = userEmail.value +  "@FakeDomain.com";	
             const signInPassword = userPassword.value;
             signInWithEmailAndPassword(auth, signInEmail, signInPassword)
             .then((userCredential) => {
@@ -358,72 +369,55 @@ document.addEventListener("visibilitychange", async () => {
 
 onAuthStateChanged(auth, async (user) => {
     if(user) {
-        authForm.style.display = 'none';
-        secretContent.style.display = 'none';
-        waitingScreen.style.display = 'block';
-        
+        if (user.email === "admin@fakedomain.com") {
+            // Admin login - show admin screen and skip ready user logic
+            adminScreen.style.display = 'block';
+            waitingScreen.style.display = 'none';
+            secretContent.style.display = 'none';
+            authForm.style.display = 'none';
+            alert("Je bent ingelogd als admin. Je hebt toegang tot het admin scherm.");
+            return; // Exit early to skip the rest of the function
+        } else {
+            // Regular user login
+            authForm.style.display = 'none';
+            secretContent.style.display = 'none';
+            waitingScreen.style.display = 'block';
+            adminScreen.style.display = 'none';
+        }
+
+        // The rest of your existing code for regular users...
         const sessionSnap = await getDoc(sessionRef);
         const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
-            // Create the session document if it doesn't exist
-    // You might want to check if it exists first or handle the error if it doesn't.
-    // A simple way to ensure it exists with initial data:
-    try {
-        await setDoc(sessionRef, { readyUsers: [] }, { merge: true }); // Use merge: true to not overwrite if it exists
-        console.log("Game session document created or updated.");
-    } catch (error) {
-        console.error("Error creating/updating game session document:", error);
-        // Handle error appropriately - maybe the user can't join
-        await signOut(auth); // Log out the user if the session can't be created
-        return; // Stop further execution in this block
-    }
 
+        // Create the session document if it doesn't exist
+        try {
+            await setDoc(sessionRef, { readyUsers: [] }, { merge: true });
+            console.log("Game session document created or updated.");
+        } catch (error) {
+            console.error("Error creating/updating game session document:", error);
+            await signOut(auth);
+            return;
+        }
 
+        if (!sessionData.readyUser) {
+            await updateDoc(sessionRef, { readyUser: user.uid });
+        } else if (!sessionData.readyUser2 && sessionData.readyUser !== user.uid) {
+            await updateDoc(sessionRef, { readyUser2: user.uid });
+        } else if (sessionData.readyUser === user.uid || sessionData.readyUser2 === user.uid) {
+            console.log("Gebruiker is al geregistreerd als klaar.");
+        } else {
+            alert("Er zijn al 2 spelers klaar. Wacht op de volgende ronde.");
+            await signOut(auth);
+            return;
+        }
 
-
-
-
-
-if (!sessionData.readyUser) {
-    await updateDoc(sessionRef, { readyUser: user.uid });
-} else if (!sessionData.readyUser2 && sessionData.readyUser !== user.uid) {
-    await updateDoc(sessionRef, { readyUser2: user.uid });
-} else if (sessionData.readyUser === user.uid || sessionData.readyUser2 === user.uid) {
-    console.log("Gebruiker is al geregistreerd als klaar.");
-} else {
-    alert("Er zijn al 2 spelers klaar. Wacht op de volgende ronde.");
-    await signOut(auth);
-    return;
-}
-
-        // Listen for startTime
-        onSnapshot(sessionRef, (docSnap) => {
-            const data = docSnap.data();
-            if (data && data.startTime) {
-                const startTime = new Date(data.startTime);
-                const now = new Date();
-                const delay = startTime - now;
-
-                if (delay > 0) {
-                    setTimeout(startQuiz, delay);
-                } else {
-                    startQuiz();
-                }
-            }
-
-            // Check both users are present before starting
-            if (data.readyUser && data.readyUser2 && !data.startTime) {
-                const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
-                updateDoc(sessionRef, {
-                    startTime: futureTime.toISOString()
-                });
-                alert("2 mensen zijn klaar, quiz start over 5 seconden");
-            }
-        });
-
+        // Rest of your existing code...
     } else {
+        // No user logged in
         authForm.style.display = 'block';
         secretContent.style.display = 'none';
         waitingScreen.style.display = 'none';
+        adminScreen.style.display = 'none';
     }
 });
 
@@ -605,38 +599,6 @@ const userSignOut = async () => {
             }
         }
 
-        async function getHighestScore() {
-            const user = auth.currentUser;
-
-            if (user) {
-                const scoresRef = collection(db, "users", user.uid, "scores");
-                const scoresQuery = query(scoresRef, orderBy("score", "desc"), limit(1));
-                try {
-                    const querySnapshot = await getDocs(scoresQuery);
-                    if(!querySnapshot.empty) {
-                        return querySnapshot.docs.data().score;
-                    } else {
-                        console.log("No scores found");
-                        return null;
-                    }
-                } catch(error) {
-                    console.log("Error fetching scores", error);
-                    return null;
-                }
-            } else {
-                console.log("No user is signed in.");
-                return null;
-            }
-        }
-
-        async function displayHighScore() {
-            const highScore = await getHighestScore();
-            if(highScore != null) {
-                highScoreMessage.textContent = "Je hoogste score is " + highScore;
-            } else {
-                highScoreMessage.textContent = "";
-            }
-        }
 
         function displayIncorrectAnswers() {
             incorrectAnswersDiv.style.display = 'block';
@@ -651,6 +613,7 @@ const userSignOut = async () => {
         signInButton.addEventListener('click', userSignIn);
         signOutButton.addEventListener('click', userSignOut);
         signOutButton2.addEventListener('click', userSignOut);
+        signOutButton3.addEventListener('click', userSignOut);
         submitButton.addEventListener('click', submit);
     </script>
 </body>
