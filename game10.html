@@ -326,7 +326,7 @@ document.addEventListener("visibilitychange", async () => {
         secretContent.style.display = 'none';
 
         const userSignUp = async() => {
-            const signUpEmail = userEmail.value + "@gmail.com";
+            const signUpEmail = userEmail.value + "@FakeDomain.com";
             const signUpPassword = userPassword.value;
             createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
             .then((userCredential) => {
