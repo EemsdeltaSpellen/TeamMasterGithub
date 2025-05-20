@@ -90,6 +90,34 @@
             max-width: 400px;
         }
         
+        /* Progress bar styles */
+        .progress-container {
+            width: 90%;
+            max-width: 500px;
+            height: 30px;
+            background-color: #f0f0f0;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: flex;
+         /*   justify-content: center; */
+            align-items: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 100%;
+            transition: width 1s linear;
+        }
+        
+        .time-text {
+            font-size: 1em;
+            margin-top: 5px;
+        }
+        
         /* Responsive aanpassingen */
         @media (max-width: 600px) {
             body {
@@ -116,6 +144,10 @@
                 height: 150px;
                 margin-bottom: 20px;
             }
+            
+            .progress-container {
+                height: 25px;
+            }
         }
     </style>
 </head>
@@ -140,9 +172,12 @@
             <option value="">Kies een antwoord...</option>
         </select> <br><br>
         <button id="submitButton">Verstuur</button>
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div id="timeText" class="time-text">Tijd over: 60 seconden</div>
         <h2 id="scoreSpace"></h2>
         <button id="signOutButton">Uitloggen</button>
-        <h2 id="timer"></h2>
         <div id="incorrectAnswers" style="display: none;">
             <h2>Verkeerde antwoorden:</h2>
             <ul id="incorrectAnswersList"></ul>
@@ -150,19 +185,16 @@
     </div>
 
     <div id="waitingScreen" style="display: none;">
-    <h1>Wachten op een andere speler...</h1>
-    <p>De quiz begint zodra beide spelers klaar zijn.</p>
-    <button id="signOutButton2">Uitloggen</button>
+        <h1>Wachten op een andere speler...</h1>
+        <p>De quiz begint zodra beide spelers klaar zijn.</p>
+        <button id="signOutButton2">Uitloggen</button>
     </div>
-        <div id="AdminScherm" style="display: none;">
+    
+    <div id="AdminScherm" style="display: none;">
         <h1>Admin Scherm</h1>
         <p>Hier kan je het niveau van de quiz en de vragen beheren.</p>
         <button id="signOutButton3">Uitloggen</button>
-        </div>
-
-
-        
-</div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
@@ -199,25 +231,12 @@
             measurementId: "G-6W7B65HCJX"
         };
 
-
-
-
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-
-
-        //test \/
         const sessionRef = doc(db, "gameSession", "current");
-        //test /\
 
-
-
-
-
-
-
+        // DOM elements
         const userEmail = document.querySelector("#userEmail");
         const userPassword = document.querySelector("#userPassword");
         const authForm = document.querySelector("#authForm");
@@ -231,312 +250,233 @@
         const signOutButton3 = document.querySelector("#signOutButton3");
         const submitButton = document.querySelector("#submitButton");
         const highScoreMessage = document.querySelector("#highScoreMessage");
-        const timerDisplay = document.querySelector("#timer");
         const questionSpace = document.querySelector("#questionSpace");
         const userSelect = document.querySelector("#userSelect");
         const scoreSpace = document.querySelector("#scoreSpace");
         const incorrectAnswersList = document.querySelector("#incorrectAnswersList");
         const incorrectAnswersDiv = document.querySelector("#incorrectAnswers");
-        
+        const progressBar = document.querySelector("#progressBar");
+        const timeText = document.querySelector("#timeText");
 
-
+        // Quiz variables
         let timer;
         let timeLeft = 60;
+        let totalTime = 60;
         let timerEnded = false;
         let score = 0;
         let usedQuestionIndices = [];
         let currentQuestionIndex;
         let incorrectAnswers = [];
-
-window.addEventListener("beforeunload", async (e) => {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    try {
-        const sessionSnap = await getDoc(sessionRef);
-        const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
-        const updates = {};
-        let changed = false;
-
-        if (sessionData.readyUser === user.uid) {
-            updates.readyUser = null;
-            changed = true;
-        }
-
-        if (sessionData.readyUser2 === user.uid) {
-            updates.readyUser2 = null;
-            changed = true;
-        }
-
-        if (changed) {
-            updates.startTime = null; // reset starttijd
-            await updateDoc(sessionRef, updates);
-        }
-    } catch (error) {
-        console.error("Fout bij automatisch resetten tijdens afsluiten:", error);
-    }
-});
-
-document.addEventListener("visibilitychange", async () => {
-    if (document.visibilityState === "hidden") {
-        const user = auth.currentUser;
-        if (!user) return;
-
-        try {
-            const sessionSnap = await getDoc(sessionRef);
-            const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
-            const updates = {};
-            let changed = false;
-
-            if (sessionData.readyUser === user.uid) {
-                updates.readyUser = null;
-                changed = true;
-            }
-
-            if (sessionData.readyUser2 === user.uid) {
-                updates.readyUser2 = null;
-                changed = true;
-            }
-
-            if (changed) {
-                updates.startTime = null;
-                await updateDoc(sessionRef, updates);
-            }
-        } catch (error) {
-            console.error("Fout bij visibilitychange:", error);
-        }
-    }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // Quiz vragen
         let questions = [];
 
+        // Event listeners for page visibility and beforeunload
+        window.addEventListener("beforeunload", handlePageUnload);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        async function handlePageUnload(e) {
+            const user = auth.currentUser;
+            if (!user) return;
+            await resetUserReadyStatus(user.uid);
+        }
+
+        async function handleVisibilityChange() {
+            if (document.visibilityState === "hidden") {
+                const user = auth.currentUser;
+                if (!user) return;
+                await resetUserReadyStatus(user.uid);
+            }
+        }
+
+        async function resetUserReadyStatus(userId) {
+            try {
+                const sessionSnap = await getDoc(sessionRef);
+                const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
+                const updates = {};
+                let changed = false;
+
+                if (sessionData.readyUser === userId) {
+                    updates.readyUser = null;
+                    changed = true;
+                }
+
+                if (sessionData.readyUser2 === userId) {
+                    updates.readyUser2 = null;
+                    changed = true;
+                }
+
+                if (changed) {
+                    updates.startTime = null;
+                    await updateDoc(sessionRef, updates);
+                }
+            } catch (error) {
+                console.error("Error resetting user status:", error);
+            }
+        }
+
+        // Load questions from JSON
         async function loadQuestions() {
             try {
-                const response = await fetch('https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenRaadzaal.json'); // relative path or full URL
+                const response = await fetch('https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenRaadzaal.json');
                 questions = await response.json();
-                displayQuestion(); // call once questions are loaded
+                displayQuestion();
             } catch (error) {
-                console.error("Fout bij het laden van de vragen:", error);
+                console.error("Error loading questions:", error);
             }
-}
+        }
 
-
-        secretContent.style.display = 'none';
-
+        // Authentication functions
         const userSignUp = async() => {
             const signUpEmail = userEmail.value + "@FakeDomain.com";
             const signUpPassword = userPassword.value;
             createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
-                alert("account is aangemaakt!");
+                alert("Account is aangemaakt!");
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                alert(errorCode + errorMessage)
-            })
+                alert(error.message);
+            });
         }
 
         const userSignIn = async() => {
-            const signInEmail = userEmail.value +  "@FakeDomain.com";	
+            const signInEmail = userEmail.value + "@FakeDomain.com";	
             const signInPassword = userPassword.value;
             signInWithEmailAndPassword(auth, signInEmail, signInPassword)
             .then((userCredential) => {
-                const user = userCredential.user;
                 alert("Succesvol ingelogd! Zodra je op OK/SLUIT klikt kom je in het wachtscherm");
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode + errorMessage)
-            })
+                alert(error.message);
+            });
         }
 
-onAuthStateChanged(auth, async (user) => {
-    if(user) {
-        if (user.email === "admin@fakedomain.com") {
-            // Admin login - show admin screen and skip ready user logic
-            adminScreen.style.display = 'block';
-            waitingScreen.style.display = 'none';
-            secretContent.style.display = 'none';
-            authForm.style.display = 'none';
-            alert("Je bent ingelogd als admin. Je hebt toegang tot het admin scherm.");
-            return; // Exit early to skip the rest of the function
-        } else {
-            // Regular user login
-            authForm.style.display = 'none';
-            secretContent.style.display = 'none';
-            waitingScreen.style.display = 'block';
-            adminScreen.style.display = 'none';
-        }
+        const userSignOut = async () => {
+            const confirmSignOut = confirm("Weet je zeker dat je wilt uitloggen? Je huidige quiz wordt beëindigd.");
+            if (confirmSignOut) {
+                const user = auth.currentUser;
+                if (user) {
+                    await resetUserReadyStatus(user.uid);
+                }
+                await signOut(auth);
+            }
+        };
 
-        // The rest of your existing code for regular users...
-        const sessionSnap = await getDoc(sessionRef);
-        const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
+        // Auth state observer
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                if (user.email === "admin@fakedomain.com") {
+                    // Admin login
+                    adminScreen.style.display = 'block';
+                    waitingScreen.style.display = 'none';
+                    secretContent.style.display = 'none';
+                    authForm.style.display = 'none';
+                    alert("Je bent ingelogd als admin.");
+                    return;
+                } else {
+                    // Regular user login
+                    authForm.style.display = 'none';
+                    secretContent.style.display = 'none';
+                    waitingScreen.style.display = 'block';
+                    adminScreen.style.display = 'none';
+                }
 
-        // Create the session document if it doesn't exist
-        try {
-            await setDoc(sessionRef, { readyUsers: [] }, { merge: true });
-            console.log("Game session document created or updated.");
-        } catch (error) {
-            console.error("Error creating/updating game session document:", error);
-            await signOut(auth);
-            return;
-        }
+                const sessionSnap = await getDoc(sessionRef);
+                const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
 
-        if (!sessionData.readyUser) {
-            await updateDoc(sessionRef, { readyUser: user.uid });
-        } else if (!sessionData.readyUser2 && sessionData.readyUser !== user.uid) {
-            await updateDoc(sessionRef, { readyUser2: user.uid });
-        } else if (sessionData.readyUser === user.uid || sessionData.readyUser2 === user.uid) {
-            console.log("Gebruiker is al geregistreerd als klaar.");
-        } else {
-            alert("Er zijn al 2 spelers klaar. Wacht op de volgende ronde.");
-            await signOut(auth);
-            return;
-        }
+                try {
+                    await setDoc(sessionRef, { readyUsers: [] }, { merge: true });
+                } catch (error) {
+                    console.error("Error creating session document:", error);
+                    await signOut(auth);
+                    return;
+                }
 
-        
-    } else {
-        // No user logged in
-        authForm.style.display = 'block';
-        secretContent.style.display = 'none';
-        waitingScreen.style.display = 'none';
-        adminScreen.style.display = 'none';
-    }
-});
-
-onSnapshot(sessionRef, (docSnap) => {
-    const data = docSnap.data();
-    if (!data) return;
-
-    // Check if we have two different ready users and game isn't already starting/started
-    if (data.readyUser && data.readyUser2 && 
-        data.readyUser !== data.readyUser2 && 
-        !data.startTime) {
-        
-        console.log("Two players ready, starting game...");
-        const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
-        updateDoc(sessionRef, {
-            startTime: futureTime.toISOString()
-        }).then(() => {
-            alert("2 mensen zijn klaar, quiz start over 5 seconden");
-        }).catch(error => {
-            console.error("Error setting start time:", error);
+                if (!sessionData.readyUser) {
+                    await updateDoc(sessionRef, { readyUser: user.uid });
+                } else if (!sessionData.readyUser2 && sessionData.readyUser !== user.uid) {
+                    await updateDoc(sessionRef, { readyUser2: user.uid });
+                } else if (sessionData.readyUser === user.uid || sessionData.readyUser2 === user.uid) {
+                    console.log("User already registered as ready.");
+                } else {
+                    alert("Er zijn al 2 spelers klaar. Wacht op de volgende ronde.");
+                    await signOut(auth);
+                    return;
+                }
+            } else {
+                // No user logged in
+                authForm.style.display = 'block';
+                secretContent.style.display = 'none';
+                waitingScreen.style.display = 'none';
+                adminScreen.style.display = 'none';
+            }
         });
-    }
 
-    // Handle the actual game start when startTime is reached
-    if (data.startTime) {
-        const startTime = new Date(data.startTime);
-        const now = new Date();
-        const delay = startTime - now;
+        // Session listener
+        onSnapshot(sessionRef, (docSnap) => {
+            const data = docSnap.data();
+            if (!data) return;
 
-        if (delay > 0) {
-            console.log(`Game will start in ${delay}ms`);
-            setTimeout(startQuiz, delay);
-        } else if (delay > -5000) { // Allow 5 second grace period for late clients
-            console.log("Game should start now!");
-            startQuiz();
-        }
-    }
-});
+            if (data.readyUser && data.readyUser2 && 
+                data.readyUser !== data.readyUser2 && 
+                !data.startTime) {
+                
+                console.log("Two players ready, starting game...");
+                const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
+                updateDoc(sessionRef, {
+                    startTime: futureTime.toISOString()
+                }).then(() => {
+                    alert("2 mensen zijn klaar, quiz start over 5 seconden");
+                }).catch(error => {
+                    console.error("Error setting start time:", error);
+                });
+            }
 
+            if (data.startTime) {
+                const startTime = new Date(data.startTime);
+                const now = new Date();
+                const delay = startTime - now;
+
+                if (delay > 0) {
+                    console.log(`Game will start in ${delay}ms`);
+                    setTimeout(startQuiz, delay);
+                } else if (delay > -5000) {
+                    console.log("Game should start now!");
+                    startQuiz();
+                }
+            }
+        });
 
         function startQuiz() {
             waitingScreen.style.display = 'none';
             secretContent.style.display = 'block';
             resetQuiz();
             loadQuestions();
-          
-        
             startTimer();
         }
 
-
-
         function resetQuiz() {
-            // Reset quiz status
             clearInterval(timer);
             timeLeft = 60;
+            totalTime = 60;
             timerEnded = false;
             score = 0;
             usedQuestionIndices = [];
             incorrectAnswers = [];
             
-            // Reset UI elements
+            // Reset UI
             userSelect.style.display = '';
             submitButton.style.display = '';
             scoreSpace.innerHTML = "";
-            timerDisplay.textContent = `Tijd over: ${timeLeft} seconden`;
+            updateProgressBar();
             incorrectAnswersDiv.style.display = 'none';
             incorrectAnswersList.innerHTML = '';
-            
         }
 
-
-
-
-        
-const userSignOut = async () => {
-    const confirmSignOut = confirm("Weet je zeker dat je wilt uitloggen? Je huidige quiz wordt beëindigd en je zult deze opnieuw moeten doen.");
-    if (confirmSignOut) {
-        const user = auth.currentUser;
-        if (user) {
-            try {
-                const sessionSnap = await getDoc(sessionRef);
-                const sessionData = sessionSnap.exists() ? sessionSnap.data() : {};
-
-                const updates = {};
-                let shouldResetSession = false;
-
-                if (sessionData.readyUser === user.uid) {
-                    updates.readyUser = null;
-                    shouldResetSession = true;
-                }
-                if (sessionData.readyUser2 === user.uid) {
-                    updates.readyUser2 = null;
-                    shouldResetSession = true;
-                }
-
-                if (shouldResetSession) {
-                    updates.startTime = null; // <-- This line resets the auto-start
-                    await updateDoc(sessionRef, updates);
-                }
-            } catch (error) {
-                console.error("Fout bij resetten van gebruikersstatus:", error);
-            }
-        }
-
-        // Log de gebruiker uit
-        await signOut(auth);
-    }
-};
-
-
-
-      
-
-        // Timer functies
         function startTimer() {
+            updateProgressBar();
             timer = setInterval(() => {
                 timeLeft--;
-                timerDisplay.textContent = `Tijd over: ${timeLeft} seconden`;
+                updateProgressBar();
 
                 if (timeLeft <= 0 && !timerEnded) { 
                     timerEnded = true; 
@@ -546,9 +486,25 @@ const userSignOut = async () => {
             }, 1000);
         }
 
+        function updateProgressBar() {
+            const percentage = (timeLeft / totalTime) * 100;
+            progressBar.style.width = `${percentage}%`;
+            
+            // Change color based on time left
+            if (percentage > 50) {
+                progressBar.style.backgroundColor = '#4CAF50'; // Green
+            } else if (percentage > 20) {
+                progressBar.style.backgroundColor = '#FFC107'; // Yellow
+            } else {
+                progressBar.style.backgroundColor = '#F44336'; // Red
+            }
+            
+            timeText.textContent = `Tijd over: ${timeLeft} seconden`;
+        }
+
         function getRandomQuestionIndex() {
             if (usedQuestionIndices.length === questions.length) {
-                return -1; // Alle vragen zijn gebruikt
+                return -1;
             }
             
             let randomIndex;
@@ -569,13 +525,9 @@ const userSignOut = async () => {
             
             usedQuestionIndices.push(currentQuestionIndex);
             
-            // Reset dropdown
             userSelect.innerHTML = '<option value="">Kies een antwoord...</option>';
-            
-            // Toon huidige vraag
             questionSpace.innerHTML = questions[currentQuestionIndex].question;
             
-            // Voeg opties toe aan dropdown
             questions[currentQuestionIndex].options.forEach(option => {
                 const optionElement = document.createElement("option");
                 optionElement.value = option;
@@ -611,10 +563,8 @@ const userSignOut = async () => {
             questionSpace.innerHTML = "Quiz afgerond!";
             userSelect.style.display = 'none';
             submitButton.style.display = 'none';
-            scoreSpace.innerHTML = "Je eindscore is " + score + " van de " + questions.length + " vragen goed";
-            const finalScore = score;
-            saveUserScore(finalScore);
-  
+            scoreSpace.innerHTML = `Je eindscore is ${score} van de ${questions.length} vragen goed`;
+            saveUserScore(score);
             displayIncorrectAnswers();
         }
 
@@ -628,29 +578,25 @@ const userSignOut = async () => {
                         score: scoreParameter,
                         timestamp: new Date()
                     });
-                    console.log("Document successfully written!");
                 } catch(error) {
-                    console.error("Error adding document: ", error);
+                    console.error("Error saving score: ", error);
                 }
-            } else {
-                console.log("No user is signed in.");
             }
         }
 
-
         function displayIncorrectAnswers() {
-    incorrectAnswersDiv.style.display = 'block';
-    incorrectAnswersList.innerHTML = ""; // Reset list
-    incorrectAnswers.forEach(answer => {
-        const li = document.createElement("li");
-        li.innerHTML = `<strong>Vraag:</strong> ${answer.question}<br>
-                        <strong>Jouw antwoord:</strong> ${answer.selectedAnswer || "Geen antwoord"}<br>
-                        <strong>Correct antwoord:</strong> ${answer.correctAnswer}`;
-        incorrectAnswersList.appendChild(li);
-    });
-}
+            incorrectAnswersDiv.style.display = 'block';
+            incorrectAnswersList.innerHTML = "";
+            incorrectAnswers.forEach(answer => {
+                const li = document.createElement("li");
+                li.innerHTML = `<strong>Vraag:</strong> ${answer.question}<br>
+                                <strong>Jouw antwoord:</strong> ${answer.selectedAnswer || "Geen antwoord"}<br>
+                                <strong>Correct antwoord:</strong> ${answer.correctAnswer}`;
+                incorrectAnswersList.appendChild(li);
+            });
+        }
 
-
+        // Event listeners
         signUpButton.addEventListener('click', userSignUp);
         signInButton.addEventListener('click', userSignIn);
         signOutButton.addEventListener('click', userSignOut);
