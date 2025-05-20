@@ -411,7 +411,7 @@ onAuthStateChanged(auth, async (user) => {
             return;
         }
 
-        // Rest of your existing code...
+        
     } else {
         // No user logged in
         authForm.style.display = 'block';
@@ -420,6 +420,43 @@ onAuthStateChanged(auth, async (user) => {
         adminScreen.style.display = 'none';
     }
 });
+
+onSnapshot(sessionRef, (docSnap) => {
+    const data = docSnap.data();
+    if (!data) return;
+
+    // Check if we have two different ready users and game isn't already starting/started
+    if (data.readyUser && data.readyUser2 && 
+        data.readyUser !== data.readyUser2 && 
+        !data.startTime) {
+        
+        console.log("Two players ready, starting game...");
+        const futureTime = new Date(Date.now() + 5000); // 5 sec buffer
+        updateDoc(sessionRef, {
+            startTime: futureTime.toISOString()
+        }).then(() => {
+            alert("2 mensen zijn klaar, quiz start over 5 seconden");
+        }).catch(error => {
+            console.error("Error setting start time:", error);
+        });
+    }
+
+    // Handle the actual game start when startTime is reached
+    if (data.startTime) {
+        const startTime = new Date(data.startTime);
+        const now = new Date();
+        const delay = startTime - now;
+
+        if (delay > 0) {
+            console.log(`Game will start in ${delay}ms`);
+            setTimeout(startQuiz, delay);
+        } else if (delay > -5000) { // Allow 5 second grace period for late clients
+            console.log("Game should start now!");
+            startQuiz();
+        }
+    }
+});
+
 
         function startQuiz() {
             waitingScreen.style.display = 'none';
