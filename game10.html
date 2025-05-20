@@ -343,7 +343,7 @@
             const signInPassword = userPassword.value;
             signInWithEmailAndPassword(auth, signInEmail, signInPassword)
             .then((userCredential) => {
-                alert("Succesvol ingelogd! Zodra je op OK/SLUIT klikt kom je in het wachtscherm");
+                
             })
             .catch((error) => {
                 alert(error.message);
@@ -425,7 +425,7 @@
                 updateDoc(sessionRef, {
                     startTime: futureTime.toISOString()
                 }).then(() => {
-                    alert("2 mensen zijn klaar, quiz start over 5 seconden");
+                    
                 }).catch(error => {
                     console.error("Error setting start time:", error);
                 });
