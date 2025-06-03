@@ -95,19 +95,21 @@
       const data = sessionSnap.data();
       const skillLevel = data.skillLevel || "1";
 
+
+      
       let vragenURL;
       switch (skillLevel) {
         case "1":
-          vragenURL = "https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json";
+          vragenURL = "https://raw.githubusercontent.com/EemsdeltaSpellen/TeamMasterGithub/main/ArchiefVragen/VragenArchiefNiveau1.json";
           break;
         case "2":
-          vragenURL = "https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json";
+          vragenURL = "https://raw.githubusercontent.com/EemsdeltaSpellen/TeamMasterGithub/main/ArchiefVragen/VragenArchiefNiveau2.json";
           break;
         case "3":
-          vragenURL = "https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json";
+          vragenURL = "https://raw.githubusercontent.com/EemsdeltaSpellen/TeamMasterGithub/main/ArchiefVragen/VragenArchiefNiveau3.json";
           break;
         default:
-          vragenURL = "https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json";
+          vragenURL = "https://raw.githubusercontent.com/EemsdeltaSpellen/TeamMasterGithub/main/ArchiefVragen/VragenArchiefNiveau1.json";
       }
 
       const response = await fetch(vragenURL);

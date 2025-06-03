@@ -1,0 +1,60 @@
+[
+  {
+  "question": "Wat betekent de term \"activiteitsfeed\" in Teams?",
+  "options": [
+      {"text": "kies antwoord", "value": ""},
+      {"text": "Een samenvatting van alle meldingen en belangrijke gebeurtenissen", "value": "A"},
+      {"text": "Een automatische herinnering voor niet-gelezen berichten", "value": "B"},
+      {"text": "Een plek waar teams dagelijkse rapporten delen", "value": "C"},
+      {"text": "Een weergave van alle geplande vergaderingen", "value": "D"}
+  ],
+  "correct": "A"
+  },
+  
+  
+  
+  
+  
+  {
+  "question": "Wat kun je gebruiken om samen te werken aan een Excel-bestand binnen Teams?",
+  "options": [
+      {"text": "kies antwoord", "value": ""},
+      {"text": "Het bestand downloaden en opnieuw uploaden na wijzigingen", "value": "A"},
+      {"text": "Live samenwerking via de geïntegreerde Office 365-tools", "value": "B"},
+      {"text": "Een apart tabblad instellen in OneDrive", "value": "C"}
+  ],
+  "correct": "B"
+  },
+  
+  
+  
+  
+  {
+  "question": "Wat moet je doen om een vastgemaakt bericht in een kanaal te verwijderen?",
+  "options": [
+      {"text": "kies antwoord", "value": ""},
+      {"text": "Op de \"Ongedaan maken\"-knop drukken in het meldingenpaneel", "value": "A"},
+      {"text": "De eigenaar van het kanaal vragen om het te verwijderen", "value": "B"},
+      {"text": "Op \"Losmaken\" klikken bij het vastgemaakte bericht", "value": "C"},
+      {"text": "Het bericht archiveren via de tabbladopties", "value": "D"}
+  ],
+  "correct": "C"
+  },
+  
+  
+  {
+  "question": "Welke rol speelt de \"Planner\"-app in Microsoft Teams?",
+  "options": [
+      {"text": "kies antwoord", "value": ""},
+      {"text": "Het organiseren en beheren van taken en projectdeadlines", "value": "A"},
+      {"text": "Het bijhouden van persoonlijke vergaderingen", "value": "B"},
+      {"text": "Het ondersteunen van cloudopslag en documentenbeheer", "value": "C"},
+      {"text": "Het maken van samenvattingen na teamvergaderingen", "value": "D"}
+  ],
+  "correct": "A"
+  }
+  
+  
+  
+  
+      ]
