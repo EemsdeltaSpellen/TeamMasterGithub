@@ -191,9 +191,14 @@
     </div>
     
     <div id="AdminScherm" style="display: none;">
-        <h1>Admin Scherm</h1>
-        <p>Hier kan je het niveau van de quiz en de vragen beheren.</p>
-        <button id="signOutButton3">Uitloggen</button>
+         <h2>Skill niveau instellen</h2>
+    <select id="skillLevel">
+        <option value="1">Klik Cadet</option>
+        <option value="2">Tech Troubadour</option>
+        <option value="3">Cursor Kapitein</option>
+    </select>
+    <button onclick="saveSkillLevel()">Opslaan</button>
+    <button id="signOutButton3">Uitloggen</button>
     </div>
 
     <script type="module">
@@ -603,6 +608,27 @@
         signOutButton2.addEventListener('click', userSignOut);
         signOutButton3.addEventListener('click', userSignOut);
         submitButton.addEventListener('click', submit);
+
+
+            
+        // Laad huidige keuze uit localStorage bij het openen
+        document.getElementById('skillLevel').value = localStorage.getItem('skillLevel') || '1';
+
+        window.saveSkillLevel = function() {
+        const selectedLevel = document.getElementById("skillLevel").value;
+
+            updateDoc(sessionRef, {
+                skillLevel: selectedLevel
+            })
+            .then(() => {
+                alert("Skill niveau opgeslagen!");
+            })
+            .catch((error) => {
+                console.error("Fout bij opslaan skill level:", error);
+                alert("Er ging iets mis bij het opslaan.");
+            });
+        }
+    
     </script>
 </body>
 </html>

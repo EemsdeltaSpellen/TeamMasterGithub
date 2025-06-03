@@ -25,21 +25,10 @@
             box-sizing: border-box;
             background-color: #f9f9f9;
         }
-        .question {
-            margin-bottom: 20px;
-        }
-        .result {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        .disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        .attempts {
-            margin-top: 10px;
-            font-weight: bold;
-        }
+        .question { margin-bottom: 20px; }
+        .result { margin-top: 20px; font-weight: bold; }
+        .disabled { background-color: #ccc; cursor: not-allowed; }
+        .attempts { margin-top: 10px; font-weight: bold; }
         .heading img {
             vertical-align: middle;
             margin-right: 10px;
@@ -57,13 +46,8 @@
             color: white;
             cursor: pointer;
         }
-        button:disabled {
-            background-color: #ccc;
-        }
-        select {
-            width: 100%;
-            white-space: normal;
-        }
+        button:disabled { background-color: #ccc; }
+        select { width: 100%; white-space: normal; }
     </style>
 </head>
 <body>
@@ -72,110 +56,145 @@
             <img src="logo.png" alt="Afbeelding">
         </h2>
         <h2>Het archief</h2>
+
         <div id="questions"></div>
-        <button id="checkButton" onclick="checkAnswers()">Controleer antwoorden</button>
-        <button id="resetButton" onclick="localStorage.removeItem('pogingen'); location.reload();">Reset</button>
+        <button id="checkButton">Controleer antwoorden</button>
+        <button id="resetButton">Reset</button>
         <div class="result" id="result"></div>
         <div class="attempts" id="attempts">Poging: 0 van 1</div>
     </div>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-        
-        const db = getFirestore(app);
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyD5g0a1pCGEbcU-PmRx7wT78xyRCpRpgLQ",
-          authDomain: "eemsdelta-a37cf.firebaseapp.com",
-          projectId: "eemsdelta-a37cf",
-          storageBucket: "eemsdelta-a37cf.firebasestorage.app",
-          messagingSenderId: "397552932048",
-          appId: "1:397552932048:web:255dfcdd57a126a2bffad5",
-          measurementId: "G-6W7B65HCJX"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-    </script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5g0a1pCGEbcU-PmRx7wT78xyRCpRpgLQ",
+    authDomain: "eemsdelta-a37cf.firebaseapp.com",
+    projectId: "eemsdelta-a37cf",
+    storageBucket: "eemsdelta-a37cf.firebasestorage.app",
+    messagingSenderId: "397552932048",
+    appId: "1:397552932048:web:255dfcdd57a126a2bffad5",
+    measurementId: "G-6W7B65HCJX"
+  };
 
-<script>
-    async function loadQuestions() {
-        try {
-            const response = await fetch('https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json');
-            questions = await response.json();
-    
-            // Select one random question
-            const selectedQuestions = [];
-            while (selectedQuestions.length < 1) {
-                const randomIndex = Math.floor(Math.random() * questions.length);
-                if (!selectedQuestions.includes(questions[randomIndex])) {
-                    selectedQuestions.push(questions[randomIndex]);
-                }
-            }
-    
-            const questionsContainer = document.getElementById('questions');
-            selectedQuestions.forEach(function (q, index) {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question';
-                questionDiv.innerHTML = `
-                    <p>${index + 1}. ${q.question}</p>
-                    <select name="q${index + 1}">
-                        ${q.options.map(option => `<option value="${option.value}">${option.text}</option>`).join('')}
-                    </select>
-                `;
-                questionsContainer.appendChild(questionDiv);
-            });
-    
-            let pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
-            document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
-    
-            if (pogingen >= 1) {
-                const checkButton = document.getElementById('checkButton');
-                checkButton.disabled = true;
-                checkButton.classList.add('disabled');
-            }
-    
-            window.checkAnswers = function () {
-                let score = 0;
-                const totalQuestions = selectedQuestions.length;
-                pogingen++;
-                localStorage.setItem('pogingen', pogingen);
-    
-                selectedQuestions.forEach(function (q, index) {
-                    const answer = document.querySelector(`select[name="q${index + 1}"]`).value;
-                    if (answer === q.correct) {
-                        score++;
-                    } else {
-                        const correctOption = q.options.find(option => option.value === q.correct);
-                        document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
-                    }
-                });
-    
-                if (score === totalQuestions) {
-                    document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
-                }
-    
-                if (pogingen >= 1) {
-                    const checkButton = document.getElementById('checkButton');
-                    checkButton.disabled = true;
-                    checkButton.classList.add('disabled');
-                }
-    
-                document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
-            };
-        } catch (error) {
-            console.error("Fout bij het laden van de vragen:", error);
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  const sessionRef = doc(db, "gameSession", "current");
+  let selectedQuestions = [];
+
+  async function loadQuestions() {
+    try {
+      const sessionSnap = await getDoc(sessionRef);
+      if (!sessionSnap.exists()) {
+        throw new Error("Sessie 'current' niet gevonden in Firestore");
+      }
+      const data = sessionSnap.data();
+      const skillLevel = data.skillLevel || "1";
+
+      let vragenURL;
+      switch (skillLevel) {
+        case "1":
+          vragenURL = "https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json";
+          break;
+        case "2":
+          vragenURL = "https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json";
+          break;
+        case "3":
+          vragenURL = "https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json";
+          break;
+        default:
+          vragenURL = "https://raw.githubusercontent.com/jorrinkie/website-test/main/VragenArchief.json";
+      }
+
+      const response = await fetch(vragenURL);
+      const questions = await response.json();
+
+      selectedQuestions = [];
+      while (selectedQuestions.length < 1) {
+        const randomIndex = Math.floor(Math.random() * questions.length);
+        if (!selectedQuestions.includes(questions[randomIndex])) {
+          selectedQuestions.push(questions[randomIndex]);
         }
+      }
+
+      const questionsContainer = document.getElementById('questions');
+      questionsContainer.innerHTML = "";
+      selectedQuestions.forEach((q, index) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question';
+        questionDiv.innerHTML = `
+          <p>${index + 1}. ${q.question}</p>
+          <select name="q${index + 1}">
+            ${q.options.map(option => `<option value="${option.value}">${option.text}</option>`).join('')}
+          </select>
+        `;
+        questionsContainer.appendChild(questionDiv);
+      });
+
+      let pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
+      document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+
+      const checkButton = document.getElementById('checkButton');
+      if (pogingen >= 1) {
+        checkButton.disabled = true;
+        checkButton.classList.add('disabled');
+      } else {
+        checkButton.disabled = false;
+        checkButton.classList.remove('disabled');
+      }
+
+      document.getElementById('result').textContent = "";
+
+    } catch (error) {
+      console.error("Fout bij het laden van de vragen:", error);
+      document.getElementById('result').textContent = "Fout bij het laden van de vragen.";
     }
-    
-    // Call the function when the script is loaded
-    loadQuestions();
-    
-        </script>
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const totalQuestions = selectedQuestions.length;
+    let pogingen = localStorage.getItem('pogingen') ? parseInt(localStorage.getItem('pogingen')) : 0;
+    pogingen++;
+    localStorage.setItem('pogingen', pogingen);
+
+    document.getElementById('result').textContent = "";
+
+    selectedQuestions.forEach((q, index) => {
+      const answer = document.querySelector(`select[name="q${index + 1}"]`).value;
+      if (answer === q.correct) {
+        score++;
+      } else {
+        const correctOption = q.options.find(option => option.value === q.correct);
+        document.getElementById('result').textContent = `Fout! Het juiste antwoord is: ${correctOption.text}`;
+      }
+    });
+
+    if (score === totalQuestions) {
+      document.getElementById('result').textContent = "Je hebt het goed! Je mag een beloning pakken van de beloningstapel";
+    }
+
+    if (pogingen >= 1) {
+      const checkButton = document.getElementById('checkButton');
+      checkButton.disabled = true;
+      checkButton.classList.add('disabled');
+    }
+
+    document.getElementById('attempts').textContent = "Poging: " + pogingen + " van 1";
+  }
+
+  document.getElementById('checkButton').addEventListener('click', checkAnswers);
+  document.getElementById('resetButton').addEventListener('click', () => {
+    localStorage.removeItem('pogingen');
+    location.reload();
+  });
+
+  loadQuestions();
+</script>
+
 </body>
 </html>
